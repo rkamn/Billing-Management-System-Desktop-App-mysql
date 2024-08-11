@@ -71,7 +71,7 @@ public class BillingController {
     List<Products> productsList = new ArrayList<>();
     List<Buyers> buyersList = new ArrayList<>();
 
-    private ObservableList<Products> productsObservableListList;
+    private ObservableList<Products> productsObservableList;
 
     @FXML
     public void initialize() {
@@ -89,8 +89,8 @@ public class BillingController {
 //        for(Products product : observableProductsList){  // printing in buyer details in console
 //            System.out.println(product.getId()+"----"+product.getName()+"---"+product.getDescription()+"---"+product.getPrice());
 //        }
-        productsObservableListList = FXCollections.observableArrayList();
-        productsTable.setItems(productsObservableListList);
+        productsObservableList = FXCollections.observableArrayList();
+        productsTable.setItems(productsObservableList);
 
     }
 
@@ -145,6 +145,7 @@ public class BillingController {
             status.setText(product.getStatus());
         }
 
+
         String priceNew = price.getText();
         String description = desc.getText(); // not mandatory
         String quantityNew = quantity.getText();
@@ -152,24 +153,51 @@ public class BillingController {
         String statusNew = status.getText(); // not mandatory
 
         if(quantityNew.isEmpty() || quantityNew == null || quantityNew.equals(0) || quantityNew.equals('0')){
-            //alert
-            customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Input Error", "Please enter Quantity for "+name);
+            customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Quantity Input Error", "Please enter Quantity for "+name);
         }
+
+
+
+
+
+        //Button cancelButton = new Button("Cancel"); => cancelButton not implemented Yet
+
+        if (!name.isEmpty() && !priceNew.isEmpty() && !quantityNew.isEmpty() && !taxSlab.isEmpty()) {
+            System.out.println("Quantity : "+quantityNew);
+
+
+            Products foundProduct = findProductByName(productsObservableList, name);
+            if (foundProduct != null) {
+                System.out.println("Duplicate Product found: " + foundProduct.getName());
+                // Further actions with foundProduct
+                int quantity= Integer.parseInt(foundProduct.getQuantity()) + Integer.parseInt(quantityNew);
+                quantityNew = quantity+"";
+                foundProduct.setQuantity(quantityNew);
+                System.out.println("Updated Quantity : "+quantityNew);
+
+                Products updatedProduct = new Products(sNo , name, priceNew, description, quantityNew, taxSlab, statusNew);
+                productsObservableList.removeIf(product -> product.getName().equals(name));
+                productsObservableList.add(updatedProduct);
+            }else{
+                Products product = new Products(sNo , name, priceNew, description, quantityNew, taxSlab, statusNew);
+                productsObservableList.add(product);
+            }
+
+
+
+
+
+
+        }
+
+
+
 
         //set fields non-Editable
         productId.setEditable(false);
         desc.setEditable(false);
         taxRate.setEditable(false);
         status.setEditable(false);
-
-        //Button cancelButton = new Button("Cancel"); => cancelButton not implemented Yet
-
-        if (!name.isEmpty() && !priceNew.isEmpty() && !quantityNew.isEmpty() && !taxSlab.isEmpty()) {
-            Products product = new Products(sNo , name, priceNew, description, quantityNew, taxSlab, statusNew);
-
-            productsObservableListList.add(product);
-
-        }
 
     }
 
@@ -192,9 +220,7 @@ public class BillingController {
         buyersEmail.clear();
         buyersAddress.clear();
 
-        productsObservableListList.clear();  //clear table data
-
-
+        productsObservableList.clear();  //clear table data
 
 
     }
@@ -207,8 +233,13 @@ public class BillingController {
 
     }
 
-    public void method(){
-
+    public static Products findProductByName(ObservableList<Products> productList, String name) {
+        for (Products product : productList) {
+            if (product.getName().equalsIgnoreCase(name)) {
+                return product;
+            }
+        }
+        return null; // Return null if no product is found
     }
 
 

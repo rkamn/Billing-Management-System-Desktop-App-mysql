@@ -58,7 +58,7 @@
         <TextField fx:id="buyersEmail" layoutX="265.0" layoutY="132.0" prefHeight="26.0" prefWidth="156.0" promptText="email" />
         <Label fx:id="myLabel131" layoutX="443.0" layoutY="137.0" text="Address : " />
         <TextField fx:id="buyersAddress" layoutX="510.0" layoutY="131.0" prefHeight="26.0" prefWidth="114.0" promptText="address" />
-        <Button fx:id="searchBuyerBtn" layoutX="651.0" layoutY="104.0" mnemonicParsing="false" onAction="#searchBuyerByMobileBtnHandler" prefHeight="55.0" prefWidth="167.0" text="Search Mobile No." />
+        <Button fx:id="searchBuyerBtn" layoutX="651.0" layoutY="104.0" mnemonicParsing="false" onAction="#searchBuyerByMobileBtnHandler" prefHeight="55.0" prefWidth="167.0" text="Buyer Details" />
 
 
 
