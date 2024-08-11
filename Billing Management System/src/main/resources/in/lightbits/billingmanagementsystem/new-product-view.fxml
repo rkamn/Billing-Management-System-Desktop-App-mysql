@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="418.0" prefWidth="536.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="in.lightbits.billingmanagementsystem.NewProductController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <children>
+        <AnchorPane prefHeight="377.0" prefWidth="497.0">
+            <children>
+                <ImageView fitHeight="392.0" fitWidth="502.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@icons/all-page-background-image.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitHeight="51.0" fitWidth="53.0" layoutX="119.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@icons/newProduct.png" />
+                    </image>
+                </ImageView>
+                <ImageView fitHeight="41.0" fitWidth="246.0" layoutX="187.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@icons/newProduct-ani.gif" />
+                    </image>
+                </ImageView>
+                <Separator layoutX="38.0" layoutY="54.0" prefHeight="32.0" prefWidth="436.0" />
+                <Label layoutX="115.0" layoutY="91.0" text="Product Name : " />
+                <TextField fx:id="productName" layoutX="225.0" layoutY="86.0" onMouseClicked="#handleFocusGainedProductName" onMouseExited="#handleFocusLostProductName" promptText="product name" />
+                <Label layoutX="113.0" layoutY="129.0" text="Price :" />
+                <TextField fx:id="price" layoutX="225.0" layoutY="124.0" onMouseClicked="#handleFocusGainedProductRate" onMouseExited="#handleFocusLostProductRate" promptText="price per unit" />
+                <Label layoutX="113.0" layoutY="209.0" prefHeight="17.0" prefWidth="74.0" text="Description  : " />
+                <TextField fx:id="desc" layoutX="227.0" layoutY="204.0" onMouseClicked="#handleFocusGainedProductDesc" onMouseExited="#handleFocusLostProductDesc" promptText="description" />
+                <Label layoutX="113.0" layoutY="168.0" prefHeight="17.0" prefWidth="74.0" text="Quantity :" />
+                <TextField fx:id="quantity" layoutX="225.0" layoutY="163.0" onMouseClicked="#handleFocusGainedProductQuantity" onMouseExited="#handleFocusLostProductQuantity" promptText="quantity" />
+                <Label layoutX="113.0" layoutY="248.0" prefHeight="17.0" prefWidth="74.0" text="Tax Rate  : " />
+                <TextField fx:id="taxRate" layoutX="227.0" layoutY="243.0" onMouseClicked="#handleFocusGainedTaxRate" onMouseExited="#handleFocusLostTaxRate" promptText="tax rate" />
+
+                <Label layoutX="115.0" layoutY="286.0" prefHeight="17.0" prefWidth="65.0" text="Active : " />
+                <ChoiceBox fx:id="status" layoutX="229.0" layoutY="281.0" prefHeight="26.0" prefWidth="160.0" />
+                <Separator layoutX="34.0" layoutY="313.0" prefHeight="11.0" prefWidth="436.0" />
+                <Button fx:id="saveProductBtn" layoutX="113.0" layoutY="331.0" mnemonicParsing="false" onAction="#saveProductBtnHandler" text="Save Product" />
+                <Button fx:id="resetProductBtn" layoutX="250.0" layoutY="331.0" mnemonicParsing="false" onAction="#resetProductBtnHandler" text="Reset" />
+                <Button fx:id="closeProductBtn" layoutX="340.0" layoutY="331.0" mnemonicParsing="false" onAction="#closeProductBtnHandler" text="Close" />
+
+            </children>
+        </AnchorPane>
+    </children>
+
+
+</VBox>

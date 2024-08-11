@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="394.0" prefWidth="832.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="in.lightbits.billingmanagementsystem.BillingController">
+    <children>
+        <ImageView fitHeight="394.0" fitWidth="837.0" layoutX="-4.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@icons/billingBackground.png" />
+            </image>
+        </ImageView>
+
+        <ImageView fitHeight="47.0" fitWidth="47.0" layoutX="26.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@icons/billing.png" />
+            </image>
+        </ImageView>
+
+        <ImageView fitHeight="47.0" fitWidth="124.0" layoutX="84.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@icons/billing-ani.gif" />
+            </image>
+        </ImageView>
+
+        <Separator layoutX="225.0" layoutY="11.0" orientation="VERTICAL" prefHeight="69.0" prefWidth="6.0" />
+
+        <Label fx:id="myLabel8" layoutX="241.0" layoutY="20.0" text="shopName" />
+        <Label fx:id="myLabel9" layoutX="241.0" layoutY="41.0" text="shopAddress" />
+        <Label fx:id="myLabel18" layoutX="242.0" layoutY="65.0" text="GST No. : " />
+        <Label fx:id="myLabel81" layoutX="303.0" layoutY="65.0" text="gst" />
+
+        <Separator layoutX="621.0" layoutY="11.0" orientation="VERTICAL" prefHeight="69.0" prefWidth="6.0" />
+
+        <Label fx:id="myLabel3" layoutX="637.0" layoutY="18.0" text="User :" />
+        <Label fx:id="currentUser" layoutX="680.0" layoutY="20.0" text="loggedUser" />
+        <Label fx:id="myLabel2" layoutX="637.0" layoutY="41.0" text="Date :" />
+        <Label fx:id="currentDate" layoutX="680.0" layoutY="41.0" text="date" />
+        <Label fx:id="myLabel1" layoutX="638.0" layoutY="65.0" text="Time : " />
+        <Label fx:id="currentTime" layoutX="680.0" layoutY="63.0" text="time" />
+
+
+        <Separator layoutX="1.0" layoutY="87.0" prefHeight="5.0" prefWidth="827.0" />
+
+        <Label fx:id="myLabel12" layoutX="41.0" layoutY="99.0" text="Buyers Details : " />
+        <Label fx:id="" layoutX="149.0" layoutY="99.0" text="Mobile : " />
+        <TextField fx:id="buyersMobile" layoutX="201.0" layoutY="95.0" prefHeight="26.0" prefWidth="224.0" promptText="enter mobile" />
+        <Label fx:id="" layoutX="41.0" layoutY="135.0" text="Name : " />
+        <TextField fx:id="buyersName" layoutX="89.0" layoutY="131.0" prefHeight="26.0" prefWidth="114.0" promptText="name here" />
+        <Label fx:id="myLabel111" layoutX="222.0" layoutY="137.0" text="Email : " />
+        <TextField fx:id="buyersEmail" layoutX="265.0" layoutY="132.0" prefHeight="26.0" prefWidth="156.0" promptText="email" />
+        <Label fx:id="myLabel131" layoutX="443.0" layoutY="137.0" text="Address : " />
+        <TextField fx:id="buyersAddress" layoutX="510.0" layoutY="131.0" prefHeight="26.0" prefWidth="114.0" promptText="address" />
+        <Button fx:id="searchBuyerBtn" layoutX="651.0" layoutY="104.0" mnemonicParsing="false" onAction="#searchBuyerByMobileBtnHandler" prefHeight="55.0" prefWidth="167.0" text="Search Mobile No." />
+
+
+
+
+
+
+        <Separator layoutX="1.0" layoutY="165.0" prefHeight="5.0" prefWidth="827.0" />
+
+        <Label fx:id="myLabel121" layoutX="41.0" layoutY="185.0" text="Product Details : " />
+        <Label fx:id="myLabel1121" layoutX="151.0" layoutY="187.0" text="Name : " />
+        <TextField fx:id="productName" layoutX="200.0" layoutY="183.0" prefHeight="26.0" prefWidth="224.0" promptText="search product name here" />
+        <Label fx:id="myLabel132" layoutX="444.0" layoutY="185.0" text="Quantity :" />
+        <TextField fx:id="quantity" layoutX="509.0" layoutY="181.0" prefHeight="26.0" prefWidth="114.0" promptText="enter quantity" />
+        <Label fx:id="myLabel1122" layoutX="41.0" layoutY="223.0" text="P_Id : " />
+        <TextField fx:id="productId" layoutX="82.0" layoutY="219.0" prefHeight="26.0" prefWidth="62.0" promptText="prod id" />
+        <Label fx:id="myLabel1321" layoutX="655.0" layoutY="185.0" text="Status :" />
+        <TextField fx:id="status" layoutX="701.0" layoutY="181.0" prefHeight="26.0" prefWidth="114.0" promptText="active" />
+        <Label fx:id="myLabel112" layoutX="161.0" layoutY="224.0" text="Price : " />
+        <TextField fx:id="price" layoutX="202.0" layoutY="220.0" prefHeight="26.0" prefWidth="62.0" promptText="price" />
+        <Label fx:id="myLabel1111" layoutX="284.0" layoutY="223.0" text="desc :" />
+        <TextField fx:id="desc" layoutX="324.0" layoutY="219.0" prefHeight="26.0" prefWidth="101.0" promptText="description" />
+        <Label fx:id="myLabel1311" layoutX="443.0" layoutY="224.0" text="Tax slab : " />
+        <TextField fx:id="taxRate" layoutX="508.0" layoutY="219.0" prefHeight="26.0" prefWidth="114.0" promptText="tax slab" />
+        <Button fx:id="addProductBtn" layoutX="651.0" layoutY="220.0" mnemonicParsing="false" onAction="#addProductBtnHandler" prefHeight="26.0" prefWidth="167.0" text="Add Product" />
+
+
+
+
+
+
+
+        <Separator layoutX="1.0" layoutY="255.0" prefHeight="5.0" prefWidth="827.0" />
+
+
+      <TableView fx:id="productsTable" layoutX="6.0" layoutY="262.0" prefHeight="128.0" prefWidth="471.0">
+        <columns>
+            <TableColumn fx:id="serialNumColumn" prefWidth="41.0" text="S. No." />
+            <TableColumn fx:id="productNameColumn" prefWidth="100.0" text="Name" />
+            <TableColumn fx:id="descColumn" prefWidth="84.0" text="Desc" />
+            <TableColumn fx:id="priceColumn" prefWidth="66.0" text="Price" />
+            <TableColumn fx:id="quantityColumn" prefWidth="55.0" text="Quant" />
+            <TableColumn fx:id="taxRateColumn" prefWidth="56.0" text="TaxSlab" />
+            <TableColumn fx:id="statusColumn" prefWidth="56.0" text="Stock" />
+        </columns>
+      </TableView>
+
+        <Separator layoutX="485.0" layoutY="267.0" orientation="VERTICAL" prefHeight="121.0" prefWidth="13.0" />
+
+        <Label fx:id="myLabel16" layoutX="580.0" layoutY="267.0" prefHeight="17.0" prefWidth="114.0" text="Calculation Details : " />
+        <Label fx:id="myLabel17" layoutX="502.0" layoutY="299.0" text="Total Amt. :" />
+        <TextField layoutX="577.0" layoutY="294.0" prefHeight="26.0" prefWidth="124.0" promptText="total amount" />
+        <Label fx:id="myLabel101" layoutX="502.0" layoutY="327.0" text="Paid Amt. :" />
+        <TextField layoutX="577.0" layoutY="322.0" prefHeight="26.0" prefWidth="124.0" promptText="paid amount" />
+        <Label fx:id="myLabel10" layoutX="502.0" layoutY="356.0" text="Return Amt. :" />
+        <TextField layoutX="577.0" layoutY="351.0" prefHeight="26.0" prefWidth="124.0" promptText="returned amount" />
+        <Button fx:id="saveBillingBtn" layoutX="712.0" layoutY="274.0" mnemonicParsing="false" onAction="#billingSaveBtnHandler" prefHeight="47.0" prefWidth="107.0" text="Save" />
+        <Button fx:id="resetBillingBtn" layoutX="712.0" layoutY="323.0" mnemonicParsing="false" onAction="#billingResetBtnHandler" prefHeight="26.0" prefWidth="107.0" text="Reset" />
+        <Button fx:id="closeBillingBtn" layoutX="712.0" layoutY="351.0" mnemonicParsing="false" onAction="#billingCloseBtnHandler" prefHeight="26.0" prefWidth="107.0" text="close" />
+
+
+
+    </children>
+</AnchorPane>
