@@ -61,7 +61,18 @@ public class BillingController {
     @FXML
     private Button closeBillingBtn;
 
+    @FXML
+    private TextField totalAmount;
+    @FXML
+    private TextField paidAmount;
+    @FXML
+    private TextField returnedAmount;
+
     private int countAddProductBtn = 0;
+
+    private float totalAmt = 0;
+    private float paidAmt = 0;
+    private float returnedAmt = 0;
 
     @FXML
     private String basePath="/in/lightbits/billingmanagementsystem/";
@@ -145,7 +156,6 @@ public class BillingController {
             status.setText(product.getStatus());
         }
 
-
         String priceNew = price.getText();
         String description = desc.getText(); // not mandatory
         String quantityNew = quantity.getText();
@@ -156,17 +166,12 @@ public class BillingController {
             customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Quantity Input Error", "Please enter Quantity for "+name);
         }
 
-
-
-
-
         //Button cancelButton = new Button("Cancel"); => cancelButton not implemented Yet
 
         if (!name.isEmpty() && !priceNew.isEmpty() && !quantityNew.isEmpty() && !taxSlab.isEmpty()) {
             System.out.println("Quantity : "+quantityNew);
 
-
-            Products foundProduct = findProductByName(productsObservableList, name);
+            Products foundProduct = findProductByName(productsObservableList, name);  // find duplicate by name
             if (foundProduct != null) {
                 System.out.println("Duplicate Product found: " + foundProduct.getName());
                 // Further actions with foundProduct
@@ -183,15 +188,7 @@ public class BillingController {
                 productsObservableList.add(product);
             }
 
-
-
-
-
-
         }
-
-
-
 
         //set fields non-Editable
         productId.setEditable(false);
@@ -199,9 +196,29 @@ public class BillingController {
         taxRate.setEditable(false);
         status.setEditable(false);
 
+
+        calculateTotalSummation();  // calculate your total
+
     }
 
     public void billingSaveBtnHandler(ActionEvent actionEvent) {
+
+
+
+        // paid amount calculation
+        String pAmount = paidAmount.getText();
+        paidAmt = Integer.parseInt(pAmount);
+        System.out.println("Amount Paid : "+paidAmt);
+
+        //returned amount calculation
+        String rAmount = returnedAmount.getText();
+        returnedAmt = totalAmt - paidAmt;
+        System.out.println("Amount Returned : "+returnedAmt);
+        returnedAmount.setText(returnedAmt+"");
+        returnedAmount.setEditable(false);
+
+
+
     }
 
     public void billingResetBtnHandler(ActionEvent actionEvent) {
@@ -240,6 +257,23 @@ public class BillingController {
             }
         }
         return null; // Return null if no product is found
+    }
+
+    public float calculateTotalSummation(){
+        float sum = 0;
+        // total amount calculation
+        for(Products product : productsObservableList){
+            float p = Float.parseFloat(product.getPrice());
+            float q = Float.parseFloat(product.getQuantity());
+            sum += p * q;
+        }
+        totalAmt = sum;
+        System.out.println("Total Amount : "+totalAmt);
+        //String tAmount = totalAmount.getText();
+        totalAmount.setText(totalAmt+"");
+        totalAmount.setEditable(false);
+
+        return totalAmt;
     }
 
 
