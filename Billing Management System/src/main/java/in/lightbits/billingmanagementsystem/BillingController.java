@@ -140,8 +140,8 @@ public class BillingController {
             productId.setText(product.getId()+""); // making string due to error
             price.setText(product.getPrice());
             desc.setText(product.getDescription());
-            quantity.setText(product.getQuantity());
-            taxRate.setText(product.getTaxRate());
+            //quantity.setText(product.getQuantity());
+            taxRate.setText(product.getTaxRate()+" %");
             status.setText(product.getStatus());
         }
 
@@ -150,6 +150,11 @@ public class BillingController {
         String quantityNew = quantity.getText();
         String taxSlab = taxRate.getText();
         String statusNew = status.getText(); // not mandatory
+
+        if(quantityNew.isEmpty() || quantityNew == null || quantityNew.equals(0) || quantityNew.equals('0')){
+            //alert
+            customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Input Error", "Please enter Quantity for "+name);
+        }
 
         //set fields non-Editable
         productId.setEditable(false);
@@ -174,7 +179,7 @@ public class BillingController {
     public void billingResetBtnHandler(ActionEvent actionEvent) {
 
         // Clear the input fields of 
-        productId.clear();
+        productId.clear();      // clear products data
         productName.clear();
         price.clear();
         desc.clear();
@@ -182,10 +187,16 @@ public class BillingController {
         taxRate.clear();
         status.clear();
 
-        buyersName.clear();
+        buyersName.clear();      // clear buyers data
         buyersMobile.clear();
         buyersEmail.clear();
         buyersAddress.clear();
+
+        productsObservableListList.clear();  //clear table data
+
+
+
+
     }
 
     public void billingCloseBtnHandler(ActionEvent actionEvent) {
