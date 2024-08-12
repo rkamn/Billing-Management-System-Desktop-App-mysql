@@ -32,24 +32,33 @@
 
         <Separator layoutX="225.0" layoutY="11.0" orientation="VERTICAL" prefHeight="69.0" prefWidth="6.0" />
 
-        <Label fx:id="myLabel8" layoutX="241.0" layoutY="20.0" text="shopName" />
-        <Label fx:id="myLabel9" layoutX="241.0" layoutY="41.0" text="shopAddress" />
-        <Label fx:id="myLabel18" layoutX="242.0" layoutY="65.0" text="GST No. : " />
-        <Label fx:id="myLabel81" layoutX="303.0" layoutY="65.0" text="gst" />
+        <Label fx:id="myLabel8" layoutX="235.0" layoutY="16.0" text="N :" />
+        <Label fx:id="myLabel9" layoutX="234.0" layoutY="41.0" text="A :  " />
+        <Label fx:id="myLabel18" layoutX="235.0" layoutY="66.0" text="GST No. : " />
+        <Label fx:id="myLabel81" layoutX="296.0" layoutY="66.0" text="gst" />
 
         <Separator layoutX="621.0" layoutY="11.0" orientation="VERTICAL" prefHeight="69.0" prefWidth="6.0" />
-
-        <Label fx:id="myLabel3" layoutX="637.0" layoutY="18.0" text="User :" />
-        <Label fx:id="currentUser" layoutX="680.0" layoutY="20.0" text="loggedUser" />
-        <Label fx:id="myLabel2" layoutX="637.0" layoutY="41.0" text="Date :" />
-        <Label fx:id="currentDate" layoutX="680.0" layoutY="41.0" text="date" />
-        <Label fx:id="myLabel1" layoutX="638.0" layoutY="65.0" text="Time : " />
-        <Label fx:id="currentTime" layoutX="680.0" layoutY="63.0" text="time" />
+        <ImageView fitHeight="37.0" fitWidth="38.0" layoutX="778.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@icons/userLogo.png" />
+            </image>
+        </ImageView>
+        <Label fx:id="myLabel3" layoutX="777.0" layoutY="57.0" text="U :" />
+        <Label fx:id="currentUser" layoutX="792.0" layoutY="57.0" text="user" />
+        <Label fx:id="myLabel2" layoutX="630.0" layoutY="12.0" text="D :" />
+        <Label fx:id="todaysDate" layoutX="647.0" layoutY="12.0" text="date" />
+        <Label fx:id="myLabel1" layoutX="719.0" layoutY="12.0" text="T : " />
+        <Label fx:id="timeNow" layoutX="735.0" layoutY="12.0" text="time" />
 
 
         <Separator layoutX="1.0" layoutY="87.0" prefHeight="5.0" prefWidth="827.0" />
 
-        <Label fx:id="myLabel12" layoutX="41.0" layoutY="99.0" text="Buyers Details : " />
+<!--        <Label fx:id="myLabel12" layoutX="41.0" layoutY="99.0" text="Buyers Details : " />-->
+        <ImageView fitHeight="28.0" fitWidth="124.0" layoutX="26.0" layoutY="94.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@icons/buyersDetails-ani.gif" />
+            </image>
+        </ImageView>
         <Label fx:id="" layoutX="149.0" layoutY="99.0" text="Mobile : " />
         <TextField fx:id="buyersMobile" layoutX="201.0" layoutY="95.0" prefHeight="26.0" prefWidth="224.0" promptText="enter mobile" />
         <Label fx:id="" layoutX="41.0" layoutY="135.0" text="Name : " />
@@ -65,9 +74,14 @@
 
 
 
-        <Separator layoutX="1.0" layoutY="165.0" prefHeight="5.0" prefWidth="827.0" />
+        <Separator layoutX="1.0" layoutY="170.0" prefHeight="5.0" prefWidth="827.0" />
 
-        <Label fx:id="myLabel121" layoutX="41.0" layoutY="185.0" text="Product Details : " />
+<!--        <Label fx:id="myLabel121" layoutX="41.0" layoutY="185.0" text="Product Details : " />-->
+        <ImageView fitHeight="26.0" fitWidth="124.0" layoutX="27.0" layoutY="184.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@icons/productDetails-ani.gif" />
+            </image>
+        </ImageView>
         <Label fx:id="myLabel1121" layoutX="151.0" layoutY="187.0" text="Name : " />
         <TextField fx:id="productName" layoutX="200.0" layoutY="183.0" prefHeight="26.0" prefWidth="224.0" promptText="search product name here" />
         <Label fx:id="myLabel132" layoutX="444.0" layoutY="185.0" text="Quantity :" />
@@ -117,6 +131,11 @@
         <Button fx:id="saveBillingBtn" layoutX="712.0" layoutY="274.0" mnemonicParsing="false" onAction="#billingSaveBtnHandler" prefHeight="47.0" prefWidth="107.0" text="Save" />
         <Button fx:id="resetBillingBtn" layoutX="712.0" layoutY="323.0" mnemonicParsing="false" onAction="#billingResetBtnHandler" prefHeight="26.0" prefWidth="107.0" text="Reset" />
         <Button fx:id="closeBillingBtn" layoutX="712.0" layoutY="351.0" mnemonicParsing="false" onAction="#billingCloseBtnHandler" prefHeight="26.0" prefWidth="107.0" text="close" />
+      <Label fx:id="myLabel82" layoutX="254.0" layoutY="16.0" text="shopName" />
+      <Label fx:id="myLabel91" layoutX="248.0" layoutY="40.0" text="  shopAddress" />
+
+
+
 
 
 

@@ -6,7 +6,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +74,13 @@ public class BillingController {
     @FXML
     private TextField returnedAmount;
 
+    @FXML
+    private Label currentUser;
+    @FXML
+    private Label todaysDate;
+    @FXML
+    private Label timeNow;
+
     private int countAddProductBtn = 0;
 
     private float totalAmt = 0;
@@ -86,6 +99,9 @@ public class BillingController {
 
     @FXML
     public void initialize() {
+        handleUserProfileName();  // set username of logged in user
+        currentTimeDateProfileImage(); // set current time and date and profile image
+
         // Initialize the columns
         serialNumColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -196,8 +212,10 @@ public class BillingController {
         taxRate.setEditable(false);
         status.setEditable(false);
 
+        productName.clear(); // makes productName empty to search new name
 
-        calculateTotalSummation();  // calculate your total
+
+        calculateTotalSummation();  // calculate your total amount
 
     }
 
@@ -205,18 +223,15 @@ public class BillingController {
 
 
 
-        // paid amount calculation
-        String pAmount = paidAmount.getText();
-        paidAmt = Integer.parseInt(pAmount);
-        System.out.println("Amount Paid : "+paidAmt);
 
-        //returned amount calculation
-        String rAmount = returnedAmount.getText();
-        returnedAmt = totalAmt - paidAmt;
-        System.out.println("Amount Returned : "+returnedAmt);
-        returnedAmount.setText(returnedAmt+"");
-        returnedAmount.setEditable(false);
 
+
+
+        paidAmountCalculation(); // paid and return amount calculation
+        returnedAmountCalculation(); // paid and return amount calculation
+        //generateInvoice();   // generate invoice to other page
+       // gererateInvoicePdf();  //generate invoice pdf
+        //saveInvoiceToDatabase();  // save invoice to database
 
 
     }
@@ -274,6 +289,53 @@ public class BillingController {
         totalAmount.setEditable(false);
 
         return totalAmt;
+    }
+    public float paidAmountCalculation(){
+        // paid amount calculation
+        String pAmount = paidAmount.getText();
+        paidAmt = Integer.parseInt(pAmount);
+        System.out.println("Amount Paid : "+paidAmt);
+        return  paidAmt;
+    }
+    public float returnedAmountCalculation(){
+        //returned amount calculation
+        String rAmount = returnedAmount.getText();
+        returnedAmt = totalAmt - paidAmt;
+        System.out.println("Amount Returned : "+returnedAmt);
+        returnedAmount.setText(returnedAmt+"");
+        returnedAmount.setEditable(false);
+        return returnedAmt;
+    }
+
+
+
+    public void handleUserProfileName(){
+        String username = SessionManager.getInstance().getUsername();
+        if(username != null){
+            currentUser.setText(username);
+        }
+        System.out.println("Current logged in User : "+username);
+    }
+
+    public void currentTimeDateProfileImage(){
+        LocalTime currentTime = LocalTime.now();
+
+        // Format the time
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
+
+        // Set the time to the Label
+        timeNow.setText(formattedTime);
+
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedDate = currentDate.format(dateFormatter);
+
+        // Set the date to the lebel
+        if (todaysDate != null) {
+            todaysDate.setText(formattedDate);
+        }
+
     }
 
 
