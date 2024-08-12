@@ -1,5 +1,7 @@
 package in.lightbits.billingmanagementsystem;
 
+import javafx.scene.control.Alert;
+
 import java.io.IOException;
 import java.sql.*;
 import java.sql.Connection;
@@ -12,6 +14,8 @@ public class DataBaseIntraction {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/billing_system";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "rakesh458458";
+    CustomUtility customUtility = new CustomUtility();
+
 
 
 
@@ -42,6 +46,45 @@ public class DataBaseIntraction {
     }
 
 
+    public  Buyers getBuyerByMobileNumber(String mobile){
+
+        Buyers buyer = new Buyers();
+        String sqlBayerSelectQuery = "select * from billing_system.buyers where mobile = ? ";
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+
+            try (Connection con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWORD);
+                 PreparedStatement statement = con.prepareStatement(sqlBayerSelectQuery)){
+
+                statement.setString(1, mobile);
+                ResultSet resultSet  = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    System.out.println("ID : " + id);
+
+                    //buyer.setId(resultSet.getInt("id"));
+                    buyer.setName(resultSet.getString("name"));
+                    buyer.setMobile(resultSet.getString("mobile"));
+                    buyer.setEmail(resultSet.getString("email"));
+                    buyer.setGender(resultSet.getString("gender"));
+                    buyer.setAddress(resultSet.getString("address"));
+
+                    System.out.println("Name : " + buyer.getName());
+                    System.out.println("Mobile : " + buyer.getMobile());
+                    System.out.println("Email : " + buyer.getEmail());
+                    System.out.println("Gender : " + buyer.getGender());
+                    System.out.println("Address : " + buyer.getAddress());
+                }
+            }
+        }catch (SQLException | ClassNotFoundException e){
+            e.printStackTrace();
+            customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching data.");
+
+        }
+        return buyer;
+    }
 
 
 

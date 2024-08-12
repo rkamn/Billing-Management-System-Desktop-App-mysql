@@ -33,9 +33,13 @@
         <Separator layoutX="225.0" layoutY="11.0" orientation="VERTICAL" prefHeight="69.0" prefWidth="6.0" />
 
         <Label fx:id="myLabel8" layoutX="235.0" layoutY="16.0" text="N :" />
+        <Label fx:id="shopName" layoutX="254.0" layoutY="16.0" text="shopName" />
         <Label fx:id="myLabel9" layoutX="234.0" layoutY="41.0" text="A :  " />
+        <Label fx:id="shopAddress" layoutX="248.0" layoutY="40.0" text="  shopAddress" />
         <Label fx:id="myLabel18" layoutX="235.0" layoutY="66.0" text="GST No. : " />
-        <Label fx:id="myLabel81" layoutX="296.0" layoutY="66.0" text="gst" />
+        <Label fx:id="gstValue" layoutX="296.0" layoutY="66.0" text="gst" />
+
+
 
         <Separator layoutX="621.0" layoutY="11.0" orientation="VERTICAL" prefHeight="69.0" prefWidth="6.0" />
         <ImageView fitHeight="37.0" fitWidth="38.0" layoutX="778.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
@@ -110,12 +114,12 @@
       <TableView fx:id="productsTable" layoutX="6.0" layoutY="262.0" prefHeight="128.0" prefWidth="471.0">
         <columns>
             <TableColumn fx:id="serialNumColumn" prefWidth="41.0" text="S. No." />
-            <TableColumn fx:id="productNameColumn" prefWidth="100.0" text="Name" />
-            <TableColumn fx:id="descColumn" prefWidth="84.0" text="Desc" />
-            <TableColumn fx:id="priceColumn" prefWidth="66.0" text="Price" />
-            <TableColumn fx:id="quantityColumn" prefWidth="55.0" text="Quant" />
-            <TableColumn fx:id="taxRateColumn" prefWidth="56.0" text="TaxSlab" />
-            <TableColumn fx:id="statusColumn" prefWidth="56.0" text="Stock" />
+            <TableColumn fx:id="productNameColumn" prefWidth="96.0" text="Name" />
+            <TableColumn fx:id="descColumn" prefWidth="76.0" text="Desc" />
+            <TableColumn fx:id="priceColumn" prefWidth="69.0" text="Price" />
+            <TableColumn fx:id="quantityColumn" prefWidth="60.0" text="Quant" />
+            <TableColumn fx:id="taxRateColumn" prefWidth="57.0" text="TaxSlab" />
+            <TableColumn fx:id="statusColumn" prefWidth="54.0" text="Stock" />
         </columns>
       </TableView>
 
@@ -131,8 +135,7 @@
         <Button fx:id="saveBillingBtn" layoutX="712.0" layoutY="274.0" mnemonicParsing="false" onAction="#billingSaveBtnHandler" prefHeight="47.0" prefWidth="107.0" text="Save" />
         <Button fx:id="resetBillingBtn" layoutX="712.0" layoutY="323.0" mnemonicParsing="false" onAction="#billingResetBtnHandler" prefHeight="26.0" prefWidth="107.0" text="Reset" />
         <Button fx:id="closeBillingBtn" layoutX="712.0" layoutY="351.0" mnemonicParsing="false" onAction="#billingCloseBtnHandler" prefHeight="26.0" prefWidth="107.0" text="close" />
-      <Label fx:id="myLabel82" layoutX="254.0" layoutY="16.0" text="shopName" />
-      <Label fx:id="myLabel91" layoutX="248.0" layoutY="40.0" text="  shopAddress" />
+
 
 
 

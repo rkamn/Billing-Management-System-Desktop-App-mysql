@@ -75,6 +75,12 @@ public class BillingController {
     private TextField returnedAmount;
 
     @FXML
+    private Label shopName;
+    @FXML
+    private Label shopAddress;
+    @FXML
+    private Label gstValue;
+    @FXML
     private Label currentUser;
     @FXML
     private Label todaysDate;
@@ -224,16 +230,71 @@ public class BillingController {
 
 
 
-
-
-
         paidAmountCalculation(); // paid and return amount calculation
         returnedAmountCalculation(); // paid and return amount calculation
-        //generateInvoice();   // generate invoice to other page
-       // gererateInvoicePdf();  //generate invoice pdf
+
+        String invoiceHeader = generateInvoiceHeader();
+
+        String invoice = generateInvoice(productsObservableList);   // generate invoice to other page
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Invoice");
+        alert.setHeaderText(invoiceHeader);
+        alert.setContentText(invoice);
+        alert.showAndWait();
+
+        // gererateInvoicePdf();  //generate invoice pdf
         //saveInvoiceToDatabase();  // save invoice to database
+    }
+
+    public String generateInvoiceHeader(){
+
+        String mobile = buyersMobile.getText();
+        Buyers buyer = dataBaseIntraction.getBuyerByMobileNumber(mobile);
+
+        StringBuilder invoiceHeader = new StringBuilder();
+
+        invoiceHeader.append("N: ").append(shopName.getText()).append("\n");
+        invoiceHeader.append("A: ").append(shopAddress.getText()).append("\n");
+        invoiceHeader.append("GST No. : ").append(gstValue.getText()).append("     Date: ").append(todaysDate.getText()).append("    Time: ").append(timeNow.getText()).append("\n");
+
+        invoiceHeader.append("C Name: "+buyer.getName()+"    Mob.: "+buyer.getMobile()+"    Adr: "+buyer.getAddress());
+
+        System.out.println("INVOICE Header");
+        System.out.println(buyer.getName());
+        System.out.println(buyer.getAddress());
+        System.out.println(buyer.getMobile());
+
+        return invoiceHeader.toString();
+    }
+
+    public String generateInvoice(ObservableList<Products> productsObservableList){
+
+        StringBuilder invoice = new StringBuilder();
+        invoice.append("INVOICE\n");
+        invoice.append("----------------------------\n");
 
 
+        for (Products product : productsObservableList) {
+            invoice.append("Product: ").append(product.getName()).append("\n");
+            invoice.append("Price per Unit: ₹").append(product.getPrice()).append("\n");
+            invoice.append("Quantity: ").append(product.getQuantity()).append("\n");
+            float cgst = Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate().substring(0,2))/100;
+            invoice.append("CGST: ₹").append(cgst).append("\n");
+            invoice.append("SGST: ₹").append(cgst).append("\n");
+            invoice.append("Total Price: ₹").append(Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getQuantity())).append("\n");
+            invoice.append("----------------------------\n");
+
+        }
+
+        invoice.append("Total Amount Due: ₹").append(calculateTotalSummation()).append("\n");
+        invoice.append("Total Amount Paid: ₹").append(paidAmountCalculation()).append("\n");
+        invoice.append("Amount Due / Returned: ₹").append(returnedAmountCalculation()).append("\n");
+        invoice.append("----------------------------\n");
+        invoice.append("Thank you for your purchase!");
+
+        System.out.println("INVOICE body ended ");
+
+        return invoice.toString();
     }
 
     public void billingResetBtnHandler(ActionEvent actionEvent) {
@@ -283,7 +344,7 @@ public class BillingController {
             sum += p * q;
         }
         totalAmt = sum;
-        System.out.println("Total Amount : "+totalAmt);
+        System.out.println("Total Amount: "+totalAmt);
         //String tAmount = totalAmount.getText();
         totalAmount.setText(totalAmt+"");
         totalAmount.setEditable(false);
@@ -293,15 +354,18 @@ public class BillingController {
     public float paidAmountCalculation(){
         // paid amount calculation
         String pAmount = paidAmount.getText();
+        if (pAmount.isEmpty()) {
+            customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Input Error", "You have not made the payment");
+        }
         paidAmt = Integer.parseInt(pAmount);
-        System.out.println("Amount Paid : "+paidAmt);
+        System.out.println("Amount Paid: "+paidAmt);
         return  paidAmt;
     }
     public float returnedAmountCalculation(){
         //returned amount calculation
         String rAmount = returnedAmount.getText();
         returnedAmt = totalAmt - paidAmt;
-        System.out.println("Amount Returned : "+returnedAmt);
+        System.out.println("Amount Returned: "+returnedAmt);
         returnedAmount.setText(returnedAmt+"");
         returnedAmount.setEditable(false);
         return returnedAmt;
@@ -314,7 +378,7 @@ public class BillingController {
         if(username != null){
             currentUser.setText(username);
         }
-        System.out.println("Current logged in User : "+username);
+        System.out.println("Current logged in User: "+username);
     }
 
     public void currentTimeDateProfileImage(){

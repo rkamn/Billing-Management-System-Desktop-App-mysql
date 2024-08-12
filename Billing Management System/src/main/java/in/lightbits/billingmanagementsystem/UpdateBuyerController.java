@@ -66,7 +66,7 @@ public class UpdateBuyerController {
     }
 
     @FXML
-    public void searchBtnHandler(ActionEvent actionEvent) throws SQLException, IOException {
+    public void searchBtnHandler() throws SQLException, IOException {
         //get data from database based on mobile
         String searchBoxMobile = searchBox.getText();
         if (searchBoxMobile.isEmpty()) {
@@ -105,8 +105,6 @@ public class UpdateBuyerController {
                     System.out.println("Mobile : " + buyerMobile);
                     System.out.println("Email : " + buyerEmail);
                     System.out.println("Gender : " + buyerGenderChoice);
-
-                  //  updateBuyerController.getDataFromResultSet(name,mobileInDB,email,gender);
                 }
             }
         }catch (SQLException | ClassNotFoundException e){
