@@ -6,10 +6,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import org.apache.pdfbox.pdmodel.font.*;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -100,8 +108,10 @@ public class BillingController {
     DataBaseIntraction dataBaseIntraction = new DataBaseIntraction();
     List<Products> productsList = new ArrayList<>();
     List<Buyers> buyersList = new ArrayList<>();
+    private ListView<Products> productListPDFView;
 
     private ObservableList<Products> productsObservableList;
+
 
     @FXML
     public void initialize() {
@@ -124,9 +134,7 @@ public class BillingController {
 //        }
         productsObservableList = FXCollections.observableArrayList();
         productsTable.setItems(productsObservableList);
-
     }
-
 
 
     public void searchBuyerByMobileBtnHandler(ActionEvent actionEvent) {
@@ -151,7 +159,6 @@ public class BillingController {
         }
 
     }
-
 
 
     public void addProductBtnHandler(ActionEvent actionEvent) {
@@ -209,7 +216,6 @@ public class BillingController {
                 Products product = new Products(sNo , name, priceNew, description, quantityNew, taxSlab, statusNew);
                 productsObservableList.add(product);
             }
-
         }
 
         //set fields non-Editable
@@ -220,7 +226,6 @@ public class BillingController {
 
         productName.clear(); // makes productName empty to search new name
 
-
         calculateTotalSummation();  // calculate your total amount
 
     }
@@ -228,22 +233,117 @@ public class BillingController {
     public void billingSaveBtnHandler(ActionEvent actionEvent) {
 
 
-
-
         paidAmountCalculation(); // paid and return amount calculation
-        returnedAmountCalculation(); // paid and return amount calculation
+        returnedAmountCalculation(); // returned and return amount calculation
 
+        invoice();  // invoice display
+
+        invoicePDF();  // invoice save in the computer
+
+
+
+
+        //saveInvoiceToDatabase();  // save invoice to database
+    }
+
+    public void invoicePDF(){
+        //generate invoice pdf
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Invoice");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        File file = fileChooser.showSaveDialog(productsTable.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                generateInvoicePDF(productsObservableList, file);
+                showAlertForPDF("Invoice saved", "The invoice has been successfully saved to " + file.getAbsolutePath());
+            } catch (IOException e) {
+                showAlertForPDF("Error", "Failed to save the invoice: " + e.getMessage());
+            }
+        }
+    }
+    private void showAlertForPDF(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText("PDF header");
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    private void generateInvoicePDF(ObservableList<Products> productsObservableList, File file) throws IOException {
+
+        try (PDDocument document = new PDDocument()) {
+
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            //below 2 lines added becouse PDType1Font.HELVETICA_BOLD is not supporting in my macbook,
+            // it may support in windows and other devices uncomment and try
+            File fontFile = new File(getClass().getResource("/fonts/open-sans/NotoSans-Regular.ttf").toURI());
+            PDType0Font font = PDType0Font.load(document, fontFile);
+
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                contentStream.beginText();
+               // contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+                contentStream.setFont(font, 14);
+                contentStream.newLineAtOffset(100, 700);
+                contentStream.showText("INVOICE PDF Generated");
+                //contentStream.showText(invoiceHeader);
+                contentStream.endText();
+
+                float yPosition = 650;
+
+                //contentStream.setFont(PDType1Font.HELVETICA, 12);
+                contentStream.setFont(font, 12);
+
+                for (Products product : productsObservableList) {
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(100, yPosition);
+                    contentStream.showText("Product: " + product.getName());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(100, yPosition - 30);
+                    contentStream.showText("Price: ₹" + product.getPrice());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(100, yPosition - 15);
+                    contentStream.showText("Quantity: " + product.getQuantity());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(100, yPosition - 45);
+                    contentStream.showText("Total Price: ₹" + product.getTotalPriceOfOneProduct());
+                    contentStream.endText();
+
+                    yPosition -= 70;
+                }
+
+                // Draw total amount
+                double totalAmount = productsObservableList.stream().mapToDouble(Products::getTotalPriceOfOneProduct).sum();
+                contentStream.beginText();
+                contentStream.newLineAtOffset(100, yPosition);
+                //contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+                contentStream.setFont(font, 12);
+                contentStream.showText("Total Amount Due: ₹" + totalAmount);
+                contentStream.endText();
+            }
+
+            document.save(file);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public void invoice(){
         String invoiceHeader = generateInvoiceHeader();
-
         String invoice = generateInvoice(productsObservableList);   // generate invoice to other page
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Invoice");
         alert.setHeaderText(invoiceHeader);
         alert.setContentText(invoice);
         alert.showAndWait();
-
-        // gererateInvoicePdf();  //generate invoice pdf
-        //saveInvoiceToDatabase();  // save invoice to database
     }
 
     public String generateInvoiceHeader(){
@@ -266,6 +366,7 @@ public class BillingController {
 
         return invoiceHeader.toString();
     }
+
 
     public String generateInvoice(ObservableList<Products> productsObservableList){
 
@@ -315,16 +416,16 @@ public class BillingController {
 
         productsObservableList.clear();  //clear table data
 
-
     }
+
 
     public void billingCloseBtnHandler(ActionEvent actionEvent) {
         System.out.println(actionEvent.getEventType() + ": closeBtnHandler ");
         customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Closing Update Bayer Page..", "Thank you!!");
         // navigation to home-view.fxml
         customUtility.navigationToNewPage(closeBillingBtn, basePath+"home-view.fxml");
-
     }
+
 
     public static Products findProductByName(ObservableList<Products> productList, String name) {
         for (Products product : productList) {
@@ -333,6 +434,12 @@ public class BillingController {
             }
         }
         return null; // Return null if no product is found
+    }
+
+    public float getTotalPriceOfOneProduct(){
+        float p = Float.parseFloat(price.getText());
+        float q = Float.parseFloat(quantity.getText());
+        return p*q;
     }
 
     public float calculateTotalSummation(){
@@ -351,6 +458,7 @@ public class BillingController {
 
         return totalAmt;
     }
+
     public float paidAmountCalculation(){
         // paid amount calculation
         String pAmount = paidAmount.getText();
@@ -399,7 +507,6 @@ public class BillingController {
         if (todaysDate != null) {
             todaysDate.setText(formattedDate);
         }
-
     }
 
 

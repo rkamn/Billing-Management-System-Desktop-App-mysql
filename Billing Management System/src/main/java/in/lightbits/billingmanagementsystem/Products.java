@@ -49,6 +49,12 @@ public class Products {
         return status;
     }
 
+    public float getTotalPriceOfOneProduct(){
+        float p = Float.parseFloat(price);
+        float q = Float.parseFloat(quantity);
+        return p*q;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

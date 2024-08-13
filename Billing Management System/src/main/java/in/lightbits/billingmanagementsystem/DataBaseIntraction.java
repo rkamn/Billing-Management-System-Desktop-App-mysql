@@ -108,9 +108,6 @@ public class DataBaseIntraction {
                     String gender = rs.getString("gender");
                     String address = rs.getString("address");
 
-
-
-
                     buyers.add(new Buyers(id, name, mobile, email, gender, address));
                 }
             }
@@ -119,12 +116,6 @@ public class DataBaseIntraction {
         }
         return buyers;
     }
-
-
-
-
-
-
 
 
     //update existing buyer by id
