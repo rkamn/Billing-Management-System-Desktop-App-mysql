@@ -112,6 +112,7 @@ public class BillingController {
 
     private ObservableList<Products> productsObservableList;
 
+    InvoiceNumberGenerator invoiceNumberGenerator = new InvoiceNumberGenerator();
 
     @FXML
     public void initialize() {
@@ -230,7 +231,7 @@ public class BillingController {
 
     }
 
-    public void billingSaveBtnHandler(ActionEvent actionEvent) {
+    public void billingSaveBtnHandler(ActionEvent actionEvent) throws IOException {
 
 
         paidAmountCalculation(); // paid and return amount calculation
@@ -239,6 +240,7 @@ public class BillingController {
         invoice();  // invoice display
 
         invoicePDF();  // invoice save in the computer
+
 
 
 
@@ -265,7 +267,7 @@ public class BillingController {
     private void showAlertForPDF(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
-        alert.setHeaderText("PDF header");
+        alert.setHeaderText(generateInvoiceHeader());
         alert.setContentText(content);
         alert.showAndWait();
     }
@@ -281,12 +283,13 @@ public class BillingController {
             File fontFile = new File(getClass().getResource("/fonts/open-sans/NotoSans-Regular.ttf").toURI());
             PDType0Font font = PDType0Font.load(document, fontFile);
 
+            String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
                 contentStream.beginText();
                // contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
                 contentStream.setFont(font, 14);
                 contentStream.newLineAtOffset(100, 700);
-                contentStream.showText("INVOICE PDF Generated");
+                contentStream.showText("INVOICE No: "+invoiceNum);
                 //contentStream.showText(invoiceHeader);
                 contentStream.endText();
 
@@ -336,11 +339,12 @@ public class BillingController {
     }
 
 
-    public void invoice(){
+    public void invoice() throws IOException {
+        String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
         String invoiceHeader = generateInvoiceHeader();
         String invoice = generateInvoice(productsObservableList);   // generate invoice to other page
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Invoice");
+        alert.setTitle("Invoice-"+invoiceNum);
         alert.setHeaderText(invoiceHeader);
         alert.setContentText(invoice);
         alert.showAndWait();
@@ -357,7 +361,7 @@ public class BillingController {
         invoiceHeader.append("A: ").append(shopAddress.getText()).append("\n");
         invoiceHeader.append("GST No. : ").append(gstValue.getText()).append("     Date: ").append(todaysDate.getText()).append("    Time: ").append(timeNow.getText()).append("\n");
 
-        invoiceHeader.append("C Name: "+buyer.getName()+"    Mob.: "+buyer.getMobile()+"    Adr: "+buyer.getAddress());
+        invoiceHeader.append("C Name: "+buyer.getName()+"  Mob.: "+buyer.getMobile()+"  Adr: "+buyer.getAddress());
 
         System.out.println("INVOICE Header");
         System.out.println(buyer.getName());
@@ -371,7 +375,14 @@ public class BillingController {
     public String generateInvoice(ObservableList<Products> productsObservableList){
 
         StringBuilder invoice = new StringBuilder();
-        invoice.append("INVOICE\n");
+
+        invoice.append("Invoice ");
+        try {
+            String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
+            invoice.append("no.: "+invoiceNum + "\n");
+        }catch (IOException e){
+
+        }
         invoice.append("----------------------------\n");
 
 
