@@ -119,9 +119,9 @@ public class DataBaseIntraction {
 
 
     //update existing buyer by id
-    public boolean updateBuyerById(int id, String name, String mobile, String email, String gender) {
+    public boolean updateBuyerById(int id, String name, String mobile, String email, String address, String gender) {
         //String updateBuyerQuery =   "INSERT INTO billing_system.buyers ( id, name, mobile, email, gender) values (?,?,?,?,?)";
-        String updateBuyerQuery = "UPDATE billing_system.buyers SET name = ?, mobile = ?, email = ?,gender = ? WHERE id = ?";
+        String updateBuyerQuery = "UPDATE billing_system.buyers SET name = ?, mobile = ?, email = ?, address = ? ,gender = ? WHERE id = ?";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -132,8 +132,9 @@ public class DataBaseIntraction {
                 stmt.setString(1, name);
                 stmt.setString(2, mobile);
                 stmt.setString(3, email);
-                stmt.setString(4, gender);
-                stmt.setInt(5, id);
+                stmt.setString(4, address);
+                stmt.setString(5, gender);
+                stmt.setInt(6, id);
                 stmt.executeUpdate();
             }
         } catch (Exception e) {
@@ -171,8 +172,8 @@ public class DataBaseIntraction {
 
 
     //insert new buyer entry to db
-    public void insertNewBuyersData(String name, String mobile, String email, String gender) {
-        String insertNewBuyerSQLQuery =   "INSERT INTO billing_system.buyers ( name, mobile, email, gender) values (?,?,?,?)";
+    public void insertNewBuyersData(String name, String mobile, String email, String address, String gender) {
+        String insertNewBuyerSQLQuery =   "INSERT INTO billing_system.buyers ( name, mobile, email,address, gender) values (?,?,?,?,?)";
 
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -182,7 +183,8 @@ public class DataBaseIntraction {
             stmt.setString(1, name);
             stmt.setString(2, mobile);
             stmt.setString(3, email);
-            stmt.setString(4, gender);
+            stmt.setString(4, address);
+            stmt.setString(5, gender);
             stmt.executeUpdate();
         }
     }catch (Exception e) {

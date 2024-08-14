@@ -37,12 +37,14 @@
                 <Separator layoutX="38.0" layoutY="83.0" prefHeight="2.0" prefWidth="436.0" />
                 <Label layoutX="116.0" layoutY="107.0" text="Name : " />
                 <TextField fx:id="buyerName" layoutX="226.0" layoutY="102.0" onMouseClicked="#handleFocusGainedBuyerName" onMouseExited="#handleFocusLostBuyerName" promptText="your name" />
-                <Label layoutX="114.0" layoutY="153.0" text="Mobile :" />
-                <TextField fx:id="buyerMobile" layoutX="226.0" layoutY="148.0" onMouseClicked="#handleFocusGainedBuyerMobile" onMouseExited="#handleFocusLostBuyerMobile" promptText="mobile" />
-                <Label layoutX="113.0" layoutY="196.0" prefHeight="17.0" prefWidth="49.0" text="Email  : " />
-                <TextField fx:id="buyerEmail" layoutX="227.0" layoutY="191.0" onMouseClicked="#handleFocusGainedBuyerEmail" onMouseExited="#handleFocusLostBuyerEmail" promptText="email" />
-                <Label layoutX="113.0" layoutY="243.0" text="Gender : " />
-                <ChoiceBox fx:id="buyerGenderChoice" layoutX="227.0" layoutY="238.0" prefHeight="26.0" prefWidth="160.0" />
+                <Label layoutX="114.0" layoutY="143.0" text="Mobile :" />
+                <TextField fx:id="buyerMobile" layoutX="226.0" layoutY="138.0" onMouseClicked="#handleFocusGainedBuyerMobile" onMouseExited="#handleFocusLostBuyerMobile" promptText="mobile" />
+                <Label layoutX="113.0" layoutY="181.0" prefHeight="17.0" prefWidth="49.0" text="Email  : " />
+                <TextField fx:id="buyerEmail" layoutX="227.0" layoutY="176.0" onMouseClicked="#handleFocusGainedBuyerEmail" onMouseExited="#handleFocusLostBuyerEmail" promptText="email" />
+                <Label layoutX="113.0" layoutY="217.0" text="Address :" />
+                <TextField fx:id="buyerAddress" layoutX="226.0" layoutY="212.0" onMouseClicked="#handleFocusGainedBuyerAddress" onMouseExited="#handleFocusLostBuyerAddress" promptText="your address" />
+                <Label layoutX="114.0" layoutY="252.0" text="Gender : " />
+                <ChoiceBox fx:id="buyerGenderChoice" layoutX="228.0" layoutY="247.0" prefHeight="26.0" prefWidth="160.0" />
                 <Separator layoutX="33.0" layoutY="280.0" prefHeight="11.0" prefWidth="436.0" />
                 <Button fx:id="saveBtn" layoutX="117.0" layoutY="310.0" mnemonicParsing="false" onAction="#saveBtnHandler" text="Save" />
                 <Button fx:id="resetBtn" layoutX="227.0" layoutY="310.0" mnemonicParsing="false" onAction="#resetBtnHandler" text="Reset" />

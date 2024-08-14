@@ -30,6 +30,8 @@ public class UpdateBuyerController {
     @FXML
     private TextField buyerEmail;
     @FXML
+    private TextField buyerAddress;
+    @FXML
     private ChoiceBox<String> buyerGenderChoice;
 
     @FXML
@@ -97,6 +99,7 @@ public class UpdateBuyerController {
                     buyerName.setText(resultSet.getString("name"));
                     buyerMobile.setText(resultSet.getString("mobile"));
                     buyerEmail.setText(resultSet.getString("email"));
+                    buyerAddress.setText(resultSet.getString("address"));
                     buyerGenderChoice.setValue(resultSet.getString("gender"));
                     System.out.println(buyerName);
 
@@ -104,6 +107,7 @@ public class UpdateBuyerController {
                     System.out.println("Name : " + buyerName);
                     System.out.println("Mobile : " + buyerMobile);
                     System.out.println("Email : " + buyerEmail);
+                    System.out.println("Name : " + buyerAddress);
                     System.out.println("Gender : " + buyerGenderChoice);
                 }
             }
@@ -149,12 +153,14 @@ public class UpdateBuyerController {
             int id = buyerId;
             String name = buyerName.getText();
             String mobile = buyerMobile.getText();
-            String gender = buyerGenderChoice.getValue();
             String email = buyerEmail.getText();
+            String address = buyerName.getText();
+            String gender = buyerGenderChoice.getValue();
+
 
 
             // insert data to database at given id
-            boolean success = dataBaseIntraction.updateBuyerById( id,  name,  mobile,  email,  gender);
+            boolean success = dataBaseIntraction.updateBuyerById( id,  name,  mobile,  email, address, gender);
             System.out.println(success);
             if (success) {
                 customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION,"Success", "User information updated successfully.");
@@ -208,5 +214,9 @@ public class UpdateBuyerController {
     }
 
 
+    public void handleFocusGainedBuyerAddress(MouseEvent mouseEvent) {
+    }
 
+    public void handleFocusLostBuyerAddress(MouseEvent mouseEvent) {
+    }
 }
