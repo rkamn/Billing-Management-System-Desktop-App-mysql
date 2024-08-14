@@ -243,8 +243,6 @@ public class BillingController {
 
 
 
-
-
         //saveInvoiceToDatabase();  // save invoice to database
     }
 
@@ -280,7 +278,7 @@ public class BillingController {
 
             //below 2 lines added becouse PDType1Font.HELVETICA_BOLD is not supporting in my macbook,
             // it may support in windows and other devices uncomment and try
-            File fontFile = new File(getClass().getResource("/fonts/open-sans/NotoSans-Regular.ttf").toURI());
+            File fontFile = new File(getClass().getResource("/fonts/font/NotoSans-Regular.ttf").toURI());
             PDType0Font font = PDType0Font.load(document, fontFile);
 
             String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
