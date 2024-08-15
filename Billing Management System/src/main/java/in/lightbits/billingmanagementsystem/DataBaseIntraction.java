@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.*;
 
 public class DataBaseIntraction {
@@ -169,8 +170,6 @@ public class DataBaseIntraction {
 
 
 
-
-
     //insert new buyer entry to db
     public void insertNewBuyersData(String name, String mobile, String email, String address, String gender) {
         String insertNewBuyerSQLQuery =   "INSERT INTO billing_system.buyers ( name, mobile, email,address, gender) values (?,?,?,?,?)";
@@ -193,6 +192,33 @@ public class DataBaseIntraction {
     }
 
 
+    public void storeInvoiceDataToDatabase(int buyer_id, String name, String mobile , float total, LocalDate date,String invoice) {
+        String invoiceInsertQuery = "INSERT INTO invoices (buyer_id, name, mobile, total, date, invoice) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                 PreparedStatement statement = conn.prepareStatement(invoiceInsertQuery)) {
+
+                statement.setInt(1, buyer_id);
+                statement.setString(2, name);
+                statement.setString(3, mobile);
+                statement.setDouble(4, total);
+                statement.setDate(5, java.sql.Date.valueOf(date));
+                statement.setString(6, invoice);
+
+                statement.executeUpdate();
+//                int rowsInserted = statement.executeUpdate();
+//
+//                if (rowsInserted > 0) {
+//                    System.out.println("A new invoice has been inserted successfully!");
+//                }
+             }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+    }
 
 
 

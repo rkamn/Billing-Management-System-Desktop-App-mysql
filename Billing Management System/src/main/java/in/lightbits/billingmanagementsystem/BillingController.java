@@ -34,6 +34,8 @@ public class BillingController {
     @FXML
     private TextField buyersAddress;
 
+    private int buyersId;
+
     @FXML
     private TextField productId;
     @FXML
@@ -112,6 +114,7 @@ public class BillingController {
 
     private ObservableList<Products> productsObservableList;
 
+   // Buyers buyer = new Buyers();
     InvoiceNumberGenerator invoiceNumberGenerator = new InvoiceNumberGenerator();
 
     @FXML
@@ -139,6 +142,7 @@ public class BillingController {
 
 
     public void searchBuyerByMobileBtnHandler(ActionEvent actionEvent) {
+
         String mobile = buyersMobile.getText();
         String email = buyersEmail.getText();
         String name = buyersName.getText();
@@ -152,6 +156,8 @@ public class BillingController {
             System.out.println("Email : " + buyer.getEmail());
             System.out.println("Address : " + buyer.getAddress());
 
+
+            buyersId = buyer.getId();
             buyersMobile.setText(buyer.getMobile());
             buyersName.setText(buyer.getName());
             buyersEmail.setText(buyer.getEmail());
@@ -226,6 +232,8 @@ public class BillingController {
         status.setEditable(false);
 
         productName.clear(); // makes productName empty to search new name
+        paidAmount.clear();
+
 
         calculateTotalSummation();  // calculate your total amount
 
@@ -235,17 +243,32 @@ public class BillingController {
 
 
         paidAmountCalculation(); // paid and return amount calculation
+
         returnedAmountCalculation(); // returned and return amount calculation
 
         invoice();  // invoice display
 
         invoicePDF();  // invoice save in the computer
 
+        saveInvoiceToDatabase();  // save invoice to database
 
-
-        //saveInvoiceToDatabase();  // save invoice to database
     }
 
+    public void saveInvoiceToDatabase(){
+        try {
+            String invoiceNumber = invoiceNumberGenerator.generateInvoiceNumber();
+            String customerName = buyersName.getText();
+            String mobile = buyersMobile.getText();
+            float totalAmount = calculateTotalSummation();
+            LocalDate date = LocalDate.now();
+
+            dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNumber);
+
+            System.out.println("Invoice stored with number: " + invoiceNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void invoicePDF(){
         //generate invoice pdf
         FileChooser fileChooser = new FileChooser();
