@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import org.apache.pdfbox.pdmodel.font.*;
 
@@ -68,6 +69,8 @@ public class BillingController {
     private TableColumn<Products, String> taxRateColumn;
     @FXML
     private TableColumn<Products, String> statusColumn;
+    @FXML
+    private Button searchBuyerBtn;
     @FXML
     private Button addProductBtn;
     @FXML
@@ -141,32 +144,87 @@ public class BillingController {
     }
 
 
-    public void searchBuyerByMobileBtnHandler(ActionEvent actionEvent) {
+    public void searchBuyerByMobileBtnHandler() {
 
         String mobile = buyersMobile.getText();
-        String email = buyersEmail.getText();
-        String name = buyersName.getText();
-        String address = buyersAddress.getText();
 
-        buyersList = dataBaseIntraction.searchBuyersByMobileNumber(mobile);  // search buyers in databse
-        for(Buyers buyer : buyersList){
-            System.out.println("ID : " + buyer.getId());
-            System.out.println("Name : " + buyer.getName());
-            System.out.println("Mobile : " + buyer.getMobile());
-            System.out.println("Email : " + buyer.getEmail());
-            System.out.println("Address : " + buyer.getAddress());
+        buyersList = dataBaseIntraction.searchBuyersByMobileNumber(mobile);  // search buyers in database
+        if (!buyersList.isEmpty()) {
+            for (Buyers buyer : buyersList) {
+                System.out.println("ID : " + buyer.getId());
+                System.out.println("Name : " + buyer.getName());
+                System.out.println("Mobile : " + buyer.getMobile());
+                System.out.println("Email : " + buyer.getEmail());
+                System.out.println("Address : " + buyer.getAddress());
 
 
-            buyersId = buyer.getId();
-            buyersMobile.setText(buyer.getMobile());
-            buyersName.setText(buyer.getName());
-            buyersEmail.setText(buyer.getEmail());
-            buyersAddress.setText(buyer.getAddress());
+                buyersId = buyer.getId();
+                buyersMobile.setText(buyer.getMobile());
+                buyersName.setText(buyer.getName());
+                buyersEmail.setText(buyer.getEmail());
+                buyersAddress.setText(buyer.getAddress());
+
+                buyersName.setEditable(false);
+                buyersEmail.setEditable(false);
+                buyersAddress.setEditable(false);
+
+            }
+        }
+        else{
+            buyersMobile.setText(mobile);
+
+            buyersName.setEditable(true);
+            buyersEmail.setEditable(true);
+            buyersAddress.setEditable(true);
+
+            buyersName.setText("");
+            buyersEmail.setText("");
+            buyersAddress.setText("");
+
+            searchBuyerBtn.setVisible(false);
+
+
+
 
         }
-
+    }
+    public void handleFocusGainedBuyerMobile(MouseEvent mouseEvent) {
+//        String mobileNumber = buyersMobile.getText();
+//        ComboBox<Buyers> dropdown = new ComboBox<>();
+//        dropdown.setVisible(false);
+//        buyersMobile.focusedProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue) {
+//                // Focus gained, perform the search
+//               // String mobileNumber = buyersMobile.getText();
+//                ObservableList<Buyers> mobileResults = (ObservableList<Buyers>) dataBaseIntraction.getAllBuyersByMobileNumbers();
+//                dropdown.setItems(mobileResults);
+//                dropdown.setVisible(true);
+//
+//            }
+//        });
+//        buyersMobile.textProperty().addListener((observable, oldValue, newValue) ->{
+//            if(!newValue.isEmpty()){
+//                ObservableList<Buyers> filterBuyersNumbers = FXCollections.observableArrayList();
+//                for(Buyers buyer : dropdown.getItems()){
+//                    if(buyer.getMobile().startsWith(newValue)){
+//                        filterBuyersNumbers.add(buyer);
+//                    }
+//                }
+//                dropdown.setItems(filterBuyersNumbers);
+//                dropdown.show();
+//            }else {
+//                dropdown.hide();
+//            }
+//        });
+//        dropdown.valueProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                buyersMobile.setText(""+newValue);
+//            }
+//        });
     }
 
+    public void handleFocusLostBuyerMobile(MouseEvent mouseEvent) {
+    }
 
     public void addProductBtnHandler(ActionEvent actionEvent) {
         countAddProductBtn++;
@@ -241,6 +299,7 @@ public class BillingController {
 
     public void billingSaveBtnHandler(ActionEvent actionEvent) throws IOException {
 
+        checkBuyersDetailsNotEmpty();  // checks buyer when mobile not available in database
 
         paidAmountCalculation(); // paid and return amount calculation
 
@@ -252,8 +311,33 @@ public class BillingController {
 
         saveInvoiceToDatabase();  // save invoice to database
 
+        resetStatusAll();
+
+    }
+    public void resetStatusAll(){
+        searchBuyerBtn.setVisible(true);
+        billingResetBtnHandler();
     }
 
+    public void checkBuyersDetailsNotEmpty(){
+        //add buyer as a new buyer and add him to the database
+        if(buyersName.getText().isEmpty() || buyersEmail.getText().isEmpty() || buyersAddress.getText().isEmpty()){
+            customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "new mobile user", " This mobile number is a new user");
+        }
+
+        String gender = "null";
+        String mobile = buyersMobile.getText();
+        String name = buyersName.getText();
+        String email = buyersEmail.getText();
+        String address = buyersAddress.getText();
+
+        dataBaseIntraction.insertNewBuyersData(name,mobile,email,address,gender);
+
+        List<Buyers> buyersList = dataBaseIntraction.searchBuyersByMobileNumber(mobile);
+        for(Buyers buyer : buyersList){
+            buyersId = buyer.getId();
+        }
+    }
     public void saveInvoiceToDatabase(){
         try {
             String invoiceNumber = invoiceNumberGenerator.generateInvoiceNumber();
@@ -261,6 +345,7 @@ public class BillingController {
             String mobile = buyersMobile.getText();
             float totalAmount = calculateTotalSummation();
             LocalDate date = LocalDate.now();
+
 
             dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNumber);
 
@@ -375,6 +460,7 @@ public class BillingController {
 
         String mobile = buyersMobile.getText();
         Buyers buyer = dataBaseIntraction.getBuyerByMobileNumber(mobile);
+        System.out.println("Current Buyer id: "+buyersId);
 
         StringBuilder invoiceHeader = new StringBuilder();
 
@@ -430,7 +516,7 @@ public class BillingController {
         return invoice.toString();
     }
 
-    public void billingResetBtnHandler(ActionEvent actionEvent) {
+    public void billingResetBtnHandler() {
 
         // Clear the input fields of 
         productId.clear();      // clear products data
@@ -540,6 +626,7 @@ public class BillingController {
             todaysDate.setText(formattedDate);
         }
     }
+
 
 
 }

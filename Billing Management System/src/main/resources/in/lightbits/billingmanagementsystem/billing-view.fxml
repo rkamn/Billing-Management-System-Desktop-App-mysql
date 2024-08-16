@@ -64,7 +64,7 @@
             </image>
         </ImageView>
         <Label fx:id="" layoutX="149.0" layoutY="99.0" text="Mobile : " />
-        <TextField fx:id="buyersMobile" layoutX="201.0" layoutY="95.0" prefHeight="26.0" prefWidth="224.0" promptText="enter mobile" />
+        <TextField fx:id="buyersMobile" layoutX="201.0" layoutY="95.0" onMouseClicked="#handleFocusGainedBuyerMobile" onMouseExited="#handleFocusLostBuyerMobile" prefHeight="26.0" prefWidth="224.0" promptText="enter mobile" />
         <Label fx:id="" layoutX="41.0" layoutY="135.0" text="Name : " />
         <TextField fx:id="buyersName" layoutX="89.0" layoutY="131.0" prefHeight="26.0" prefWidth="114.0" promptText="name here" />
         <Label fx:id="myLabel111" layoutX="222.0" layoutY="137.0" text="Email : " />

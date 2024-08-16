@@ -1,5 +1,6 @@
 package in.lightbits.billingmanagementsystem;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
 import java.io.IOException;
@@ -90,6 +91,36 @@ public class DataBaseIntraction {
 
 
     public List<Buyers> getAllBuyersDetails1() {
+        List<Buyers> buyers = new ArrayList<>();
+        String getAllBuyersQuery = "SELECT id, name, mobile, email,gender, address FROM billing_system.buyers";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(getAllBuyersQuery)) {
+
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    System.out.println(id);
+                    String name = rs.getString("name");
+                    String mobile = rs.getString("mobile");
+                    String email = rs.getString("email");
+                    String gender = rs.getString("gender");
+                    String address = rs.getString("address");
+
+                    buyers.add(new Buyers(id, name, mobile, email, gender, address));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return buyers;
+    }
+
+
+    public List<Buyers> getAllBuyersByMobileNumbers() {
         List<Buyers> buyers = new ArrayList<>();
         String getAllBuyersQuery = "SELECT id, name, mobile, email,gender, address FROM billing_system.buyers";
 
@@ -236,9 +267,10 @@ public class DataBaseIntraction {
 
                 statement.setString(1, mobile);
                 ResultSet resultSet  = statement.executeQuery();
-                //updateBuyerController.getDataFromResultSet(resultSet);
-
-                while (resultSet.next()) {
+                if(resultSet.next()){
+                    System.out.println(mobile+" mobile available");
+//
+//                while (resultSet.next()) {
                     int id = resultSet.getInt("id");
 
                     //buyerName.setText(resultSet.getString("name"));
@@ -257,6 +289,11 @@ public class DataBaseIntraction {
                     System.out.println("Gender : " + gender);
 
                     }
+     //           }
+                else {
+                    System.out.println(mobile+" mobile not available in database");
+                    customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "new mobile user",  mobile + " mobile user is a new user");
+                }
                 }
             }catch (SQLException | ClassNotFoundException e){
             e.printStackTrace();
