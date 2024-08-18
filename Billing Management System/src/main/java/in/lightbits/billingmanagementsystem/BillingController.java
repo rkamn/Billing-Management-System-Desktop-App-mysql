@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import org.apache.pdfbox.jbig2.segments.Table;
 import org.apache.pdfbox.pdmodel.font.*;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -346,7 +347,6 @@ public class BillingController {
             float totalAmount = calculateTotalSummation();
             LocalDate date = LocalDate.now();
 
-
             dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNumber);
 
             System.out.println("Invoice stored with number: " + invoiceNumber);
@@ -379,30 +379,45 @@ public class BillingController {
     }
     private void generateInvoicePDF(ObservableList<Products> productsObservableList, File file) throws IOException {
 
+        String mobile = buyersMobile.getText();
+        Buyers buyer = dataBaseIntraction.getBuyerByMobileNumber(mobile);
+
         try (PDDocument document = new PDDocument()) {
 
             PDPage page = new PDPage();
             document.addPage(page);
 
-            //below 2 lines added becouse PDType1Font.HELVETICA_BOLD is not supporting in my macbook,
+            //below 2 lines added because PDType1Font.HELVETICA_BOLD is not supporting in my macbook,
             // it may support in windows and other devices uncomment and try
             File fontFile = new File(getClass().getResource("/fonts/font/NotoSans-Regular.ttf").toURI());
-            PDType0Font font = PDType0Font.load(document, fontFile);
+
+            PDType0Font myFont = PDType0Font.load(document, fontFile);
 
             String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
                 contentStream.beginText();
                // contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
-                contentStream.setFont(font, 14);
-                contentStream.newLineAtOffset(100, 700);
+                contentStream.setFont(myFont, 12);
+                contentStream.setLeading(14.5f);
+                contentStream.newLineAtOffset(100, 750);
                 contentStream.showText("INVOICE No: "+invoiceNum);
-                //contentStream.showText(invoiceHeader);
+                contentStream.newLine();
+                contentStream.showText("N: "+shopName.getText());
+                contentStream.newLine();
+                contentStream.showText("A: "+shopAddress.getText());
+                contentStream.newLine();
+                contentStream.showText("GST No. : "+gstValue.getText()+"  Date: "+todaysDate.getText()+"  Time: "+timeNow.getText());
+                contentStream.newLine();
+                contentStream.showText("C Name: "+buyer.getName()+"  Mob.: "+buyer.getMobile()+"  Adr: "+buyer.getAddress());
+                contentStream.newLine();
+                contentStream.showText("--------------------------------------------------------");
                 contentStream.endText();
 
                 float yPosition = 650;
 
                 //contentStream.setFont(PDType1Font.HELVETICA, 12);
-                contentStream.setFont(font, 12);
+                contentStream.setFont(myFont, 10);
+
 
                 for (Products product : productsObservableList) {
                     contentStream.beginText();
@@ -411,12 +426,12 @@ public class BillingController {
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(100, yPosition - 30);
+                    contentStream.newLineAtOffset(100, yPosition - 15);
                     contentStream.showText("Price: ₹" + product.getPrice());
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(100, yPosition - 15);
+                    contentStream.newLineAtOffset(100, yPosition - 30);
                     contentStream.showText("Quantity: " + product.getQuantity());
                     contentStream.endText();
 
@@ -433,9 +448,24 @@ public class BillingController {
                 contentStream.beginText();
                 contentStream.newLineAtOffset(100, yPosition);
                 //contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
-                contentStream.setFont(font, 12);
+                contentStream.setFont(myFont, 10);
                 contentStream.showText("Total Amount Due: ₹" + totalAmount);
+                contentStream.newLine();
+                contentStream.showText("Total Amount Paid: ₹"+paidAmountCalculation());
+                contentStream.newLine();
+                contentStream.showText("Amount Due / Returned: ₹"+returnedAmountCalculation());
+                contentStream.newLine();
+                contentStream.showText("------------------------------------------------------------");
+                contentStream.newLine();
+                contentStream.showText("Thank you for your purchase!");
                 contentStream.endText();
+                ///////////------------------------------
+
+                // Step-3 Creating a table
+
+
+
+                //////////------------------------------
             }
 
             document.save(file);
@@ -466,7 +496,7 @@ public class BillingController {
 
         invoiceHeader.append("N: ").append(shopName.getText()).append("\n");
         invoiceHeader.append("A: ").append(shopAddress.getText()).append("\n");
-        invoiceHeader.append("GST No. : ").append(gstValue.getText()).append("     Date: ").append(todaysDate.getText()).append("    Time: ").append(timeNow.getText()).append("\n");
+        invoiceHeader.append("GST No. : ").append(gstValue.getText()).append("  Date: ").append(todaysDate.getText()).append("  Time: ").append(timeNow.getText()).append("\n");
 
         invoiceHeader.append("C Name: "+buyer.getName()+"  Mob.: "+buyer.getMobile()+"  Adr: "+buyer.getAddress());
 
@@ -531,6 +561,10 @@ public class BillingController {
         buyersMobile.clear();
         buyersEmail.clear();
         buyersAddress.clear();
+        
+        totalAmount.clear();
+        paidAmount.clear();
+        returnedAmount.clear();
 
         productsObservableList.clear();  //clear table data
 
