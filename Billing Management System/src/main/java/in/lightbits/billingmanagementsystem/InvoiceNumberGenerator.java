@@ -52,13 +52,6 @@ public class InvoiceNumberGenerator {
         }
     }
 
-    // Example main method to demonstrate usage
-//    public static void main(String[] args) {
-//        try {
-//            String invoiceNumber = generateInvoiceNumber();
-//            System.out.println("Generated Invoice Number: " + invoiceNumber);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+
 }

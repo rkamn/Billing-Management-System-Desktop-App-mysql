@@ -123,6 +123,10 @@ public class BillingController {
     Shop shop = dataBaseIntraction.getShopDetailsByShopPincode(shopPin);
    // Buyers buyer = new Buyers();
     InvoiceNumberGenerator invoiceNumberGenerator = new InvoiceNumberGenerator();
+    String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
+
+    public BillingController() throws IOException {
+    }
 
     @FXML
     public void initialize() {
@@ -250,7 +254,7 @@ public class BillingController {
             price.setText(product.getPrice());
             desc.setText(product.getDescription());
             //quantity.setText(product.getQuantity());
-            taxRate.setText(product.getTaxRate()+" %");
+            taxRate.setText(product.getTaxRate());  // +" %"
             status.setText(product.getStatus());
         }
 
@@ -344,15 +348,15 @@ public class BillingController {
     }
     public void saveInvoiceToDatabase(){
         try {
-            String invoiceNumber = invoiceNumberGenerator.generateInvoiceNumber();
+          //  String invoiceNumber = invoiceNumberGenerator.generateInvoiceNumber();
             String customerName = buyersName.getText();
             String mobile = buyersMobile.getText();
             float totalAmount = calculateTotalSummation();
             LocalDate date = LocalDate.now();
 
-            dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNumber);
+            dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNum);
 
-            System.out.println("Invoice stored with number: " + invoiceNumber);
+            System.out.println("Invoice stored with number: " + invoiceNum);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -396,7 +400,7 @@ public class BillingController {
 
             PDType0Font myFont = PDType0Font.load(document, fontFile);
 
-            String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
+
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
                 contentStream.beginText();
                 // contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
@@ -457,52 +461,52 @@ public class BillingController {
 
                     sNo++;
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 1 * xPositionMul, yPosition-11);
+                    contentStream.newLineAtOffset(xPos * 1 * xPositionMul, yPosition-11); // serial number
                     contentStream.showText(""+sNo);
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 2 * xPositionMul, yPosition-11);
+                    contentStream.newLineAtOffset(xPos * 2 * xPositionMul, yPosition-11); // product name
                     contentStream.showText(product.getName());
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 3 * xPositionMul, yPosition-11);
+                    contentStream.newLineAtOffset(xPos * 3 * xPositionMul, yPosition-11);  // SSN number
                     contentStream.showText("SSN000" +sNo);
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 4 * xPositionMul, yPosition-11);
-                    contentStream.showText("₹ " + product.getPrice());
+                    contentStream.newLineAtOffset(xPos * 4 * xPositionMul, yPosition-11); // product price exclusive taxes
+                    contentStream.showText("₹ " + (Float.parseFloat(product.getPrice()) -    (Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate())))/100    );
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 5 * xPositionMul, yPosition-11);
+                    contentStream.newLineAtOffset(xPos * 5 * xPositionMul, yPosition-11); // quanity
                     contentStream.showText(product.getQuantity());
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 6 * xPositionMul, yPosition-11);
-                    contentStream.showText(product.getTaxRate());
+                    contentStream.newLineAtOffset(xPos * 6 * xPositionMul, yPosition-11); // CGST
+                    contentStream.showText(""+Float.parseFloat(product.getTaxRate())/2);
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 7 * xPositionMul, yPosition-11);
-                    contentStream.showText("₹ " + product.getPrice());
+                    contentStream.newLineAtOffset(xPos * 7 * xPositionMul, yPosition-11); // CGST amount
+                    contentStream.showText("₹ " + ((Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate()))/2) /100);
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 8 * xPositionMul, yPosition-11);
-                    contentStream.showText(product.getTaxRate());
+                    contentStream.newLineAtOffset(xPos * 8 * xPositionMul, yPosition-11); // SGST
+                    contentStream.showText(""+Float.parseFloat(product.getTaxRate())/2);
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 9 * xPositionMul, yPosition-11);
-                    contentStream.showText(" ₹ " + product.getPrice());
+                    contentStream.newLineAtOffset(xPos * 9 * xPositionMul, yPosition-11); //SGST amount
+                    contentStream.showText(" ₹ " + ((Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate()))/2) /100);
                     contentStream.endText();
 
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(xPos * 10 * xPositionMul, yPosition-11);
+                    contentStream.newLineAtOffset(xPos * 10 * xPositionMul, yPosition-11); // sum of each product
                     contentStream.showText(" ₹ " + product.getTotalPriceOfOneProduct());
                     contentStream.endText();
 
@@ -543,7 +547,7 @@ public class BillingController {
 
 
     public void invoice() throws IOException {
-        String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
+       // String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
         String invoiceHeader = generateInvoiceHeader();
         String invoice = generateInvoice(productsObservableList);   // generate invoice to other page
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -581,12 +585,10 @@ public class BillingController {
         StringBuilder invoice = new StringBuilder();
 
         invoice.append("Invoice ");
-        try {
-            String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
-            invoice.append("no.: "+invoiceNum + "\n");
-        }catch (IOException e){
 
-        }
+          //  String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
+            invoice.append("no.: "+invoiceNum + "\n");
+
         invoice.append("----------------------------\n");
 
 
