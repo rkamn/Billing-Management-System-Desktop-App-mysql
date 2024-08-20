@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class PDFProductTable {
+    /*
     public static void main(String[] args) {
         // Sample product details
         String[][] productDetails = {
@@ -80,5 +81,7 @@ public class PDFProductTable {
             e.printStackTrace();
         }
     }
+    */
+
     }
 

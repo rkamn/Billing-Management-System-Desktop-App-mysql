@@ -92,6 +92,7 @@ public class BillingController {
     private Label shopName;
     @FXML
     private Label shopAddress;
+    private String shopPin = "841409";
     @FXML
     private Label gstValue;
     @FXML
@@ -116,8 +117,10 @@ public class BillingController {
     List<Buyers> buyersList = new ArrayList<>();
     private ListView<Products> productListPDFView;
 
+
     private ObservableList<Products> productsObservableList;
 
+    Shop shop = dataBaseIntraction.getShopDetailsByShopPincode(shopPin);
    // Buyers buyer = new Buyers();
     InvoiceNumberGenerator invoiceNumberGenerator = new InvoiceNumberGenerator();
 
@@ -396,76 +399,140 @@ public class BillingController {
             String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
                 contentStream.beginText();
-               // contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
-                contentStream.setFont(myFont, 12);
+                // contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+                contentStream.setFont(myFont, 6);
                 contentStream.setLeading(14.5f);
-                contentStream.newLineAtOffset(100, 750);
-                contentStream.showText("INVOICE No: "+invoiceNum);
+                contentStream.newLineAtOffset(50, 750);
+                contentStream.showText("Invoice No: " + invoiceNum);
                 contentStream.newLine();
-                contentStream.showText("N: "+shopName.getText());
+                contentStream.showText("N: " + shop.getShopName());
                 contentStream.newLine();
-                contentStream.showText("A: "+shopAddress.getText());
+                contentStream.showText("A: " + shop.getShopAddress()+", "+shop.getShopPin());
                 contentStream.newLine();
-                contentStream.showText("GST No. : "+gstValue.getText()+"  Date: "+todaysDate.getText()+"  Time: "+timeNow.getText());
+                contentStream.showText("GST No. : " + shop.getShopGST() + "  Date: " + todaysDate.getText() + "  Time: " + timeNow.getText());
                 contentStream.newLine();
-                contentStream.showText("C Name: "+buyer.getName()+"  Mob.: "+buyer.getMobile()+"  Adr: "+buyer.getAddress());
+                contentStream.showText("C. Name: " + buyer.getName() + "  Mob.: " + buyer.getMobile() + "  Addr: " + buyer.getAddress());
                 contentStream.newLine();
-                contentStream.showText("--------------------------------------------------------");
+                contentStream.showText("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                contentStream.newLine();
                 contentStream.endText();
 
-                float yPosition = 650;
+                float yPosition = 670;
 
                 //contentStream.setFont(PDType1Font.HELVETICA, 12);
-                contentStream.setFont(myFont, 10);
+                contentStream.setFont(myFont, 6);
 
+                String[] productDetails = {"S.No.", "Product", "HSN code","Price", "Quantity", "CGST %", "CGST Amt","SGST %", "SGST Amt", "Total"};
+                float margin = 40;
+                float yStart = page.getMediaBox().getHeight() - margin;
+                float tableWidth = page.getMediaBox().getWidth() - 2 * margin;
+                //float yPosition = yStart;
+                float rowHeight = 15;  // 20
+                float tableHeight = rowHeight * productDetails.length;
+                float cellMargin = 5f;
 
-                for (Products product : productsObservableList) {
+                // Draw the table headers
+                for (int i = 0; i < productDetails.length; i++) {
+                    contentStream.addRect(margin + i * (tableWidth / productDetails.length), yPosition - rowHeight,
+                            tableWidth / productDetails.length, rowHeight);
                     contentStream.beginText();
-                    contentStream.newLineAtOffset(100, yPosition);
-                    contentStream.showText("Product: " + product.getName());
+                    contentStream.newLineAtOffset(margin + i * (tableWidth / productDetails.length) + cellMargin,
+                            yPosition-11);  // -15
+                    contentStream.showText(productDetails[i]);
                     contentStream.endText();
-
-                    contentStream.beginText();
-                    contentStream.newLineAtOffset(100, yPosition - 15);
-                    contentStream.showText("Price: ₹" + product.getPrice());
-                    contentStream.endText();
-
-                    contentStream.beginText();
-                    contentStream.newLineAtOffset(100, yPosition - 30);
-                    contentStream.showText("Quantity: " + product.getQuantity());
-                    contentStream.endText();
-
-                    contentStream.beginText();
-                    contentStream.newLineAtOffset(100, yPosition - 45);
-                    contentStream.showText("Total Price: ₹" + product.getTotalPriceOfOneProduct());
-                    contentStream.endText();
-
-                    yPosition -= 70;
                 }
+
+               // yPosition -= rowHeight - 15;
+
+
+                yPosition = 655;
+                int sNo = 0;
+                int xPos = 40;
+                float xPositionMul = 1.3f;
+                for (Products product : productsObservableList) {
+//                    for (int j = 0; j < productDetails.length; j++) {
+//                        contentStream.addRect(margin + j * (tableWidth / productDetails.length), yPosition - rowHeight,
+//                                tableWidth / productDetails.length, rowHeight);
+//                    }
+
+                    sNo++;
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 1 * xPositionMul, yPosition-11);
+                    contentStream.showText(""+sNo);
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 2 * xPositionMul, yPosition-11);
+                    contentStream.showText(product.getName());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 3 * xPositionMul, yPosition-11);
+                    contentStream.showText("SSN000" +sNo);
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 4 * xPositionMul, yPosition-11);
+                    contentStream.showText("₹ " + product.getPrice());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 5 * xPositionMul, yPosition-11);
+                    contentStream.showText(product.getQuantity());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 6 * xPositionMul, yPosition-11);
+                    contentStream.showText(product.getTaxRate());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 7 * xPositionMul, yPosition-11);
+                    contentStream.showText("₹ " + product.getPrice());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 8 * xPositionMul, yPosition-11);
+                    contentStream.showText(product.getTaxRate());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 9 * xPositionMul, yPosition-11);
+                    contentStream.showText(" ₹ " + product.getPrice());
+                    contentStream.endText();
+
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPos * 10 * xPositionMul, yPosition-11);
+                    contentStream.showText(" ₹ " + product.getTotalPriceOfOneProduct());
+                    contentStream.endText();
+
+                    yPosition -= rowHeight;
+                }
+
 
                 // Draw total amount
                 double totalAmount = productsObservableList.stream().mapToDouble(Products::getTotalPriceOfOneProduct).sum();
                 contentStream.beginText();
-                contentStream.newLineAtOffset(100, yPosition);
-                //contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
-                contentStream.setFont(myFont, 10);
+                contentStream.newLineAtOffset(50, yPosition);
+                contentStream.setFont(myFont, 6);
+                contentStream.newLine();
+                contentStream.showText("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                contentStream.newLine();
                 contentStream.showText("Total Amount Due: ₹" + totalAmount);
                 contentStream.newLine();
-                contentStream.showText("Total Amount Paid: ₹"+paidAmountCalculation());
+                contentStream.showText("Total Amount Paid: ₹" + paidAmountCalculation());
                 contentStream.newLine();
-                contentStream.showText("Amount Due / Returned: ₹"+returnedAmountCalculation());
+                contentStream.showText("Amount Due / Returned: ₹" + returnedAmountCalculation());
                 contentStream.newLine();
-                contentStream.showText("------------------------------------------------------------");
+                contentStream.showText("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                 contentStream.newLine();
                 contentStream.showText("Thank you for your purchase!");
                 contentStream.endText();
-                ///////////------------------------------
-
-                // Step-3 Creating a table
 
 
+                contentStream.stroke();
+                contentStream.close();
 
-                //////////------------------------------
             }
 
             document.save(file);
@@ -494,9 +561,9 @@ public class BillingController {
 
         StringBuilder invoiceHeader = new StringBuilder();
 
-        invoiceHeader.append("N: ").append(shopName.getText()).append("\n");
-        invoiceHeader.append("A: ").append(shopAddress.getText()).append("\n");
-        invoiceHeader.append("GST No. : ").append(gstValue.getText()).append("  Date: ").append(todaysDate.getText()).append("  Time: ").append(timeNow.getText()).append("\n");
+        invoiceHeader.append("N: ").append(shop.getShopName()).append("\n");//shopName.getText()
+        invoiceHeader.append("A: ").append(shop.getShopAddress()).append(shop.getShopPin()).append("\n");//shopAddress.getText()
+        invoiceHeader.append("GST No. : ").append(shop.getShopGST()).append("  Date: ").append(todaysDate.getText()).append("  Time: ").append(timeNow.getText()).append("\n");//gstValue.getText()
 
         invoiceHeader.append("C Name: "+buyer.getName()+"  Mob.: "+buyer.getMobile()+"  Adr: "+buyer.getAddress());
 
@@ -630,7 +697,6 @@ public class BillingController {
         returnedAmount.setEditable(false);
         return returnedAmt;
     }
-
 
 
     public void handleUserProfileName(){
