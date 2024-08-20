@@ -19,6 +19,7 @@ public class DataBaseIntraction {
     CustomUtility customUtility = new CustomUtility();
 
 
+
     //authenticate user
     boolean authenticateUser(String username, String password) {
         boolean isAuthenticated = false;
@@ -263,8 +264,8 @@ public class DataBaseIntraction {
     }
 
 
-    public void storeInvoiceDataToDatabase(int buyer_id, String name, String mobile , float total, LocalDate date,String invoice) {
-        String invoiceInsertQuery = "INSERT INTO invoices (buyer_id, name, mobile, total, date, invoice) VALUES (?, ?, ?, ?, ?, ?)";
+    public void storeInvoiceDataToDatabase(int buyer_id, String name, String mobile , float total, LocalDate date, String invoice, float cgst, float sgst, float taxable_price) {
+        String invoiceInsertQuery = "INSERT INTO invoices (buyer_id, name, mobile, total, date, invoice, cgst, sgst, taxable_price) VALUES (?, ?, ?, ?, ?,?,?,?, ?)";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -277,13 +278,12 @@ public class DataBaseIntraction {
                 statement.setDouble(4, total);
                 statement.setDate(5, java.sql.Date.valueOf(date));
                 statement.setString(6, invoice);
+                statement.setDouble(7, cgst);
+                statement.setDouble(8, sgst);
+                statement.setDouble(9, taxable_price);
 
                 statement.executeUpdate();
-//                int rowsInserted = statement.executeUpdate();
-//
-//                if (rowsInserted > 0) {
-//                    System.out.println("A new invoice has been inserted successfully!");
-//                }
+
              }
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -293,9 +293,7 @@ public class DataBaseIntraction {
 
 
 
-
-    public List<Buyers> searchBuyersByMobileNumber(String mobile){
-
+    public List<Buyers> searchBuyersByMobileNumber(String mobile) {
 
         List<Buyers> buyersList = new ArrayList<>();
 
@@ -333,10 +331,12 @@ public class DataBaseIntraction {
      //           }
                 else {
                     System.out.println(mobile+" mobile not available in database");
-                    customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "new mobile user",  mobile + " mobile user is a new user");
+                    if(mobile.isEmpty()){
+                        customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Error",  "Please provide mobile number");
+                    }
+                    }
                 }
-                }
-            }catch (SQLException | ClassNotFoundException e){
+        }catch (SQLException | ClassNotFoundException e){
             e.printStackTrace();
             }
         return buyersList;

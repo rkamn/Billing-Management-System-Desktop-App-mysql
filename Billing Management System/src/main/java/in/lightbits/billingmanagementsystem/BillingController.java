@@ -38,6 +38,7 @@ public class BillingController {
 
     private int buyersId;
 
+
     @FXML
     private TextField productId;
     @FXML
@@ -107,6 +108,7 @@ public class BillingController {
     private float totalAmt = 0;
     private float paidAmt = 0;
     private float returnedAmt = 0;
+
 
     @FXML
     private String basePath="/in/lightbits/billingmanagementsystem/";
@@ -184,15 +186,12 @@ public class BillingController {
             buyersName.setEditable(true);
             buyersEmail.setEditable(true);
             buyersAddress.setEditable(true);
+//
+//            buyersName.setText("");
+//            buyersEmail.setText("");
+//            buyersAddress.setText("");
 
-            buyersName.setText("");
-            buyersEmail.setText("");
-            buyersAddress.setText("");
-
-            searchBuyerBtn.setVisible(false);
-
-
-
+            searchBuyerBtn.setVisible(true);
 
         }
     }
@@ -246,7 +245,7 @@ public class BillingController {
             System.out.println("Name : " + product.getName());
             System.out.println("Price : " + product.getPrice());
             System.out.println("Description : " + product.getDescription());
-            System.out.println("Quality : " + product.getQuantity());
+            System.out.println("Quantity : " + product.getQuantity());
             System.out.println("Tax Slab : " + product.getTaxRate());
             System.out.println("Status : " + product.getStatus());
 
@@ -307,7 +306,7 @@ public class BillingController {
 
     public void billingSaveBtnHandler(ActionEvent actionEvent) throws IOException {
 
-        checkBuyersDetailsNotEmpty();  // checks buyer when mobile not available in database
+       checkBuyersDetailsNotEmpty();  // checks buyer when mobile not available in database
 
         paidAmountCalculation(); // paid and return amount calculation
 
@@ -329,32 +328,31 @@ public class BillingController {
 
     public void checkBuyersDetailsNotEmpty(){
         //add buyer as a new buyer and add him to the database
-        if(buyersName.getText().isEmpty() || buyersEmail.getText().isEmpty() || buyersAddress.getText().isEmpty()){
-            customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "new mobile user", " This mobile number is a new user");
+        if(!buyersName.getText().isEmpty() && !buyersEmail.getText().isEmpty() && !buyersAddress.getText().isEmpty()){
+            String gender = "null";
+            String mobile = buyersMobile.getText();
+            String name = buyersName.getText();
+            String email = buyersEmail.getText();
+            String address = buyersAddress.getText();
+
+            dataBaseIntraction.insertNewBuyersData(name,mobile,email,address,gender);
+        }else {
+            customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Error", " One or more buyer's field is empty");
+
         }
 
-        String gender = "null";
-        String mobile = buyersMobile.getText();
-        String name = buyersName.getText();
-        String email = buyersEmail.getText();
-        String address = buyersAddress.getText();
-
-        dataBaseIntraction.insertNewBuyersData(name,mobile,email,address,gender);
-
-        List<Buyers> buyersList = dataBaseIntraction.searchBuyersByMobileNumber(mobile);
-        for(Buyers buyer : buyersList){
-            buyersId = buyer.getId();
-        }
     }
     public void saveInvoiceToDatabase(){
         try {
-          //  String invoiceNumber = invoiceNumberGenerator.generateInvoiceNumber();
             String customerName = buyersName.getText();
             String mobile = buyersMobile.getText();
             float totalAmount = calculateTotalSummation();
             LocalDate date = LocalDate.now();
+            float cgst = cgstOrSgst();
+            float sgst = cgstOrSgst();
+            float taxablePrice = totalTaxablePrice();
 
-            dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNum);
+            dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNum, cgst, sgst, taxablePrice);
 
             System.out.println("Invoice stored with number: " + invoiceNum);
         } catch (Exception e) {
@@ -446,8 +444,6 @@ public class BillingController {
                     contentStream.endText();
                 }
 
-               // yPosition -= rowHeight - 15;
-
 
                 yPosition = 655;
                 int sNo = 0;
@@ -477,7 +473,7 @@ public class BillingController {
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 4 * xPositionMul, yPosition-11); // product price exclusive taxes
-                    contentStream.showText("₹ " + (Float.parseFloat(product.getPrice()) -    (Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate())))/100    );
+                    contentStream.showText("₹ " +(Float.parseFloat(product.getPrice()) -  (Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate())/100)));
                     contentStream.endText();
 
                     contentStream.beginText();
@@ -584,10 +580,7 @@ public class BillingController {
 
         StringBuilder invoice = new StringBuilder();
 
-        invoice.append("Invoice ");
-
-          //  String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
-            invoice.append("no.: "+invoiceNum + "\n");
+        invoice.append("Invoice ").append("no.: "+invoiceNum + "\n");
 
         invoice.append("----------------------------\n");
 
@@ -596,7 +589,7 @@ public class BillingController {
             invoice.append("Product: ").append(product.getName()).append("\n");
             invoice.append("Price per Unit: ₹").append(product.getPrice()).append("\n");
             invoice.append("Quantity: ").append(product.getQuantity()).append("\n");
-            float cgst = Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate().substring(0,2))/100;
+            float cgst = (Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate())/100)/2;
             invoice.append("CGST: ₹").append(cgst).append("\n");
             invoice.append("SGST: ₹").append(cgst).append("\n");
             invoice.append("Total Price: ₹").append(Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getQuantity())).append("\n");
@@ -678,6 +671,26 @@ public class BillingController {
         totalAmount.setEditable(false);
 
         return totalAmt;
+    }
+    public float cgstOrSgst(){
+        float cgstOrSgst = 0;
+        for(Products product : productsObservableList){
+            float p = Float.parseFloat(product.getPrice());
+            float qty = Float.parseFloat(product.getQuantity());
+            float tax = Float.parseFloat(product.getTaxRate());
+            cgstOrSgst += qty * ((p * tax)/100)/2;
+        }
+        return cgstOrSgst;
+    }
+    public float totalTaxablePrice(){
+        float taxablePrice = 0;
+        for(Products product : productsObservableList){
+            float p = Float.parseFloat(product.getPrice());
+            float qty = Float.parseFloat(product.getQuantity());
+            float tax = Float.parseFloat(product.getTaxRate());
+            taxablePrice += (p - (p * tax) / 100) * qty ;
+        }
+        return taxablePrice;
     }
 
     public float paidAmountCalculation(){

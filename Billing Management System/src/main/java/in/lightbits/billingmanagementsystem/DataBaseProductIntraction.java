@@ -49,7 +49,7 @@ public class DataBaseProductIntraction {
                     System.out.println("Name : " + name);
                     System.out.println("Price : " + price);
                     System.out.println("Description : " + desc);
-                    System.out.println("Quality : " + quantity);
+                    System.out.println("Quantity : " + quantity);
                     System.out.println("Tax Slab : " + taxRate);
                     System.out.println("Status : " + status);
 
