@@ -9,6 +9,7 @@ public class Buyers {
 
     private int id;
 
+    public Buyers(){}
 
     public Buyers(int id, String name, String mobile, String email, String gender, String address) {
         this.id = id;

@@ -11,6 +11,7 @@ public class Products {
 
     private int id;
 
+    public Products(){}
 
     public Products(int id, String name, String price, String description, String quantity, String taxRate, String status) {
         this.id = id;
@@ -47,6 +48,12 @@ public class Products {
     }
     public String getStatus() {
         return status;
+    }
+
+    public float getTotalPriceOfOneProduct(){
+        float p = Float.parseFloat(price);
+        float q = Float.parseFloat(quantity);
+        return p*q;
     }
 
     public void setName(String name) {

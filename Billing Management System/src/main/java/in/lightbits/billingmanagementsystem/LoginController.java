@@ -55,12 +55,15 @@ public class LoginController {
 
 
     @FXML
-    public void handleLogin(ActionEvent actionEvent) {
+    public String handleLogin() {
         DataBaseIntraction dataBaseIntraction = new DataBaseIntraction();
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        System.out.println(usernameField);
+        usernameField.setText(username);
+        System.out.println(username);
+
+        SessionManager.getInstance().setUsername(username);  // store username for later use
 
         Boolean authUser = dataBaseIntraction.authenticateUser(username, password);
         if (authUser) {
@@ -68,16 +71,6 @@ public class LoginController {
 
             // Switch to another scene/window home-view
             customUtility.navigationToNewPage(loginButton,basePath+"home-view.fxml");
-//            try {
-//                Parent homeView = FXMLLoader.load(getClass().getResource("/in/lightbits/billingmanagementsystem/home-view.fxml"));
-//
-//                Stage stage = (Stage) loginButton.getScene().getWindow();
-//                Scene homeScene = new Scene(homeView);
-//                stage.setScene(homeScene);
-//                stage.show();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
 
             System.out.println("Welcome :  " + username +" your login status : "+authUser);
         } else {
@@ -85,6 +78,7 @@ public class LoginController {
             System.out.println("Your Login Status : "+authUser);
             System.out.println("Login Failed, Invalid user : "+ username +" or password : "+ password);
         }
+        return username;
     }
 
     public void handleClose(ActionEvent actionEvent) {

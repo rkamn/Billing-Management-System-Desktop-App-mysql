@@ -17,6 +17,8 @@ public class NewBuyerController {
     @FXML
     private TextField buyerEmail;
     @FXML
+    private TextField buyerAddress;
+    @FXML
     private ChoiceBox<String> buyerGenderChoice;
 
 
@@ -119,12 +121,13 @@ public class NewBuyerController {
             //int mobile = Integer.parseInt(buyerMobile.getText());
             String mobile = buyerMobile.getText();
             String email = buyerEmail.getText();
+            String address = buyerAddress.getText();
             String gender = buyerGenderChoice.getValue();
             System.out.println(name);
             if(name !=null){
                 //inserting new buyer to DB
                 System.out.println("Buyer Name : "+name);
-                dataBaseIntraction.insertNewBuyersData(name,mobile,email,gender);
+                dataBaseIntraction.insertNewBuyersData(name,mobile,email, address ,gender);
                 customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Successful", "Data Saved successfully, Welcome, Mr. : " + name + " !");
                 //clear all fiels
                 resetBtnHandler(actionEvent);
@@ -143,6 +146,7 @@ public class NewBuyerController {
         buyerName.clear();
         buyerEmail.clear();
         buyerMobile.clear();
+
         //buyerGenderChoice.getItems().clear();
     }
 
@@ -157,5 +161,11 @@ public class NewBuyerController {
         customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Closing New Bayer Page..", "Closing..., Thank you!!");
         // navigation to home-view.fxml
         customUtility.navigationToNewPage(closeBtn, basePath+"home-view.fxml");
+    }
+
+    public void handleFocusGainedBuyerAddress(MouseEvent mouseEvent) {
+    }
+
+    public void handleFocusLostBuyerAddress(MouseEvent mouseEvent) {
     }
 }

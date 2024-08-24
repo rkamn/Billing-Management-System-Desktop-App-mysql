@@ -42,7 +42,6 @@ public class DeleteBuyerController{
     private String basePath="/in/lightbits/billingmanagementsystem/";
     CustomUtility customUtility = new CustomUtility();
 
-    DataBaseIntraction dataBaseIntraction = new DataBaseIntraction();
 
     public void searchBtnHandler(ActionEvent actionEvent) throws SQLException, IOException {
         String searchBoxMobile = searchBox.getText();
@@ -93,7 +92,8 @@ public class DeleteBuyerController{
         }
     }
 
-    public void deleteBtnHandler(ActionEvent actionEvent) {
+    public void deleteBtnHandler(ActionEvent actionEvent) throws IOException {
+        DataBaseIntraction dataBaseIntraction = new DataBaseIntraction();
         System.out.println(actionEvent +" : handler called");
         // check mobilenumber
         if(buyerMobile.getText().isEmpty() || buyerMobile.getText() == null){

@@ -13,6 +13,9 @@ public class Users {
     private String password;
 
 
+    public Users(){
+    }
+
     public Users(int id, String fullName, String username, String password) {
         this.id = id;
         this.fullName = fullName;
