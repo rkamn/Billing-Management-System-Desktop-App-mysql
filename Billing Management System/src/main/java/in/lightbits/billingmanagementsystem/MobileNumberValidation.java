@@ -21,7 +21,7 @@ public class MobileNumberValidation {
         boolean status = false;
         if(mobile.length() >= 10 && mobile.length() <= 12 && checkFirstCharacterOfMobile()){
             status= true;
-            System.out.println("invalid, length of "+mobile+" is "+mobile.length());
+            System.out.println("length of "+mobile+" is "+mobile.length());
         }
         return status;
     }

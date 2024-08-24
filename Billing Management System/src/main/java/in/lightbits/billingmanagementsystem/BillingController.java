@@ -108,6 +108,7 @@ public class BillingController {
     private float totalAmt = 0;
     private float paidAmt = 0;
     private float returnedAmt = 0;
+    boolean mobileNotAvailableInDatabase = false;
 
 
     @FXML
@@ -185,15 +186,14 @@ public class BillingController {
             }
         }
         else{
+
+            mobileNotAvailableInDatabase = true; // mobile not available in database status
+
             buyersMobile.setText(mobile);
 
             buyersName.setEditable(true);
             buyersEmail.setEditable(true);
             buyersAddress.setEditable(true);
-//
-//            buyersName.setText("");
-//            buyersEmail.setText("");
-//            buyersAddress.setText("");
 
             searchBuyerBtn.setVisible(true);
 
@@ -340,7 +340,7 @@ public class BillingController {
 
     public void billingSaveBtnHandler(ActionEvent actionEvent) throws IOException {
 
-       checkBuyersDetailsNotEmpty();  // checks buyer when mobile not available in database
+        checkBuyersDetailsNotEmpty();  // checks buyer when mobile not available in database
 
         paidAmountCalculation(); // paid and return amount calculation
 
@@ -364,17 +364,17 @@ public class BillingController {
 
     public void checkBuyersDetailsNotEmpty(){
         //add buyer as a new buyer and add him to the database
-        if(!buyersName.getText().isEmpty()){
-            String gender = "null";
+        if(!buyersName.getText().isEmpty() && mobileNotAvailableInDatabase){
+            //String gender = "null";
             String mobile = buyersMobile.getText();
             String name = buyersName.getText();
             String email = buyersEmail.getText();
             String address = buyersAddress.getText();
 
-            dataBaseIntraction.insertNewBuyersData(name,mobile,email,address,gender);
-        }else {
+            dataBaseIntraction.insertNewBuyersData(name,mobile,email,address,"");
+            mobileNotAvailableInDatabase = false;
+        }else if(buyersName.getText().isEmpty()){
             customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Error", " One or more buyer's field is empty");
-
         }
 
     }
@@ -388,6 +388,7 @@ public class BillingController {
             float cgst = cgstOrSgst();
             float sgst = cgstOrSgst();
             float taxablePrice = totalTaxablePrice();
+            buyersId = dataBaseIntraction.getBuyerByMobileNumber(mobile).getId();
 
             status = dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNum, cgst, sgst, taxablePrice);
             System.out.println("Invoice stored with number: " + invoiceNum);
@@ -566,7 +567,6 @@ public class BillingController {
                 contentStream.showText("Thank you for your purchase!");
                 contentStream.endText();
 
-
                 contentStream.stroke();
                 contentStream.close();
 
@@ -579,7 +579,7 @@ public class BillingController {
     }
 
 
-    public void invoice() throws IOException {
+    public void invoice() {
        // String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
         String invoiceHeader = generateInvoiceHeader();
         String invoice = generateInvoice(productsObservableList);   // generate invoice to other page

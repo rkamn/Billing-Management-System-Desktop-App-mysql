@@ -65,7 +65,7 @@ public class DataBaseIntraction {
                     int id = resultSet.getInt("id");
                     System.out.println("ID : " + id);
 
-                    //buyer.setId(resultSet.getInt("id"));
+                    buyer.setId(resultSet.getInt("id"));
                     buyer.setName(resultSet.getString("name"));
                     buyer.setMobile(resultSet.getString("mobile"));
                     buyer.setEmail(resultSet.getString("email"));
