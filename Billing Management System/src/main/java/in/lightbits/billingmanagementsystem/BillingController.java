@@ -183,6 +183,8 @@ public class BillingController {
                 buyersEmail.setEditable(false);
                 buyersAddress.setEditable(false);
 
+                mobileNotAvailableInDatabase =false; // meanse mobile number availavle in database
+
             }
         }
         else{
@@ -350,7 +352,6 @@ public class BillingController {
 
         invoicePDF();  // invoice save in the computer
 
-
         saveInvoiceToDatabase();  // save invoice to database
 
         resetStatusAll();
@@ -506,12 +507,13 @@ public class BillingController {
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 3 * xPositionMul, yPosition-11);  // SSN number
-                    contentStream.showText("SSN000" +sNo);
+                    contentStream.showText("HSNCODE" +sNo);
                     contentStream.endText();
 
+                    int localTax = Integer.parseInt(product.getTaxRate());
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 4 * xPositionMul, yPosition-11); // product price exclusive taxes
-                    contentStream.showText("₹ " +(Float.parseFloat(product.getPrice()) -  (Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate())/100)));
+                    contentStream.showText("₹ " +(Float.parseFloat(product.getPrice()) - (Float.parseFloat(product.getPrice()) * localTax/100)));
                     contentStream.endText();
 
                     contentStream.beginText();
@@ -526,7 +528,7 @@ public class BillingController {
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 7 * xPositionMul, yPosition-11); // CGST amount
-                    contentStream.showText("₹ " + ((Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate()))/2) /100);
+                    contentStream.showText("₹ " + ((Float.parseFloat(product.getPrice()) * localTax)/2) /100);
                     contentStream.endText();
 
                     contentStream.beginText();
@@ -536,7 +538,7 @@ public class BillingController {
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 9 * xPositionMul, yPosition-11); //SGST amount
-                    contentStream.showText(" ₹ " + ((Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate()))/2) /100);
+                    contentStream.showText(" ₹ " + ((Float.parseFloat(product.getPrice()) * localTax )/2) /100);
                     contentStream.endText();
 
                     contentStream.beginText();
