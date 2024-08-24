@@ -264,7 +264,8 @@ public class DataBaseIntraction {
     }
 
 
-    public void storeInvoiceDataToDatabase(int buyer_id, String name, String mobile , float total, LocalDate date, String invoice, float cgst, float sgst, float taxable_price) {
+    public boolean storeInvoiceDataToDatabase(int buyer_id, String name, String mobile , float total, LocalDate date, String invoice, float cgst, float sgst, float taxable_price) {
+        boolean status = false;
         String invoiceInsertQuery = "INSERT INTO invoices (buyer_id, name, mobile, total, date, invoice, cgst, sgst, taxable_price) VALUES (?, ?, ?, ?, ?,?,?,?, ?)";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -283,11 +284,13 @@ public class DataBaseIntraction {
                 statement.setDouble(9, taxable_price);
 
                 statement.executeUpdate();
+                status = true;
 
              }
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
+        return status;
 
     }
 

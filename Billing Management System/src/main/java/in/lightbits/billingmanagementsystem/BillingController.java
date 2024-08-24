@@ -157,8 +157,12 @@ public class BillingController {
     public void searchBuyerByMobileBtnHandler() {
 
         String mobile = buyersMobile.getText();
+        MobileNumberValidation mobileNumberValidation = new MobileNumberValidation(mobile);
+        Boolean mobileValidation = mobileNumberValidation.checkMobileValidity();
+        if(mobileValidation){
+            System.out.println(mobile+" is a valid number, Congratulation!!..");
 
-        buyersList = dataBaseIntraction.searchBuyersByMobileNumber(mobile);  // search buyers in database
+            buyersList = dataBaseIntraction.searchBuyersByMobileNumber(mobile);  // search buyers in database
         if (!buyersList.isEmpty()) {
             for (Buyers buyer : buyersList) {
                 System.out.println("ID : " + buyer.getId());
@@ -193,6 +197,10 @@ public class BillingController {
 
             searchBuyerBtn.setVisible(true);
 
+        }
+    }else{
+            System.out.println("Invalid mobile: "+mobile);
+            customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Invalid Input", mobile+ " is not a valid mobile, Please count digits");
         }
     }
     public void handleFocusGainedBuyerMobile(MouseEvent mouseEvent) {
@@ -249,14 +257,15 @@ public class BillingController {
             System.out.println("Tax Slab : " + product.getTaxRate());
             System.out.println("Status : " + product.getStatus());
 
-            productId.setText(product.getId()+""); // making string due to error
+            productId.setId(product.getId()+""); // making string due to error
             price.setText(product.getPrice());
             desc.setText(product.getDescription());
-            //quantity.setText(product.getQuantity());
+            //quantity.setText(product.getQuantity()); // this quantity should be user input not DB quantity
             taxRate.setText(product.getTaxRate());  // +" %"
             status.setText(product.getStatus());
         }
 
+        System.out.println("ID : " + productId.getId());
         String priceNew = price.getText();
         String description = desc.getText(); // not mandatory
         String quantityNew = quantity.getText();
@@ -302,6 +311,31 @@ public class BillingController {
 
         calculateTotalSummation();  // calculate your total amount
 
+        updateSoldProductQuantityInDatabase(productId.getId()); // update quantity in DB when order placed
+
+    }
+
+    public void updateSoldProductQuantityInDatabase(String prodId){
+
+        System.out.println("product id: "+ prodId);
+         Products product = dataBaseProductIntraction.getProductById(prodId);
+        System.out.println(product.getQuantity());
+            int qtyInDatabase = Integer.parseInt(product.getQuantity());
+            int qtyByUser = Integer.parseInt(quantity.getText());
+            String productStatus;
+            if( qtyInDatabase <=0 ){
+                // do not add to bucket and set status 'no' => msg: product not available in the stock
+                productStatus = "No";
+                customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Error", "Insufficient Quantity");
+                dataBaseProductIntraction.updateQuantityOfProductInDatabase(prodId, qtyInDatabase,productStatus );
+            }
+            else if( qtyInDatabase >= qtyByUser ){
+                // add to bucket and reduce quantity and set status 'yes'
+                productStatus = "Yes";
+                dataBaseProductIntraction.updateQuantityOfProductInDatabase(prodId, (qtyInDatabase-qtyByUser),productStatus );
+            }else{
+                customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Error", "Insufficient Quantity available");
+            }
     }
 
     public void billingSaveBtnHandler(ActionEvent actionEvent) throws IOException {
@@ -316,11 +350,13 @@ public class BillingController {
 
         invoicePDF();  // invoice save in the computer
 
+
         saveInvoiceToDatabase();  // save invoice to database
 
         resetStatusAll();
 
     }
+
     public void resetStatusAll(){
         searchBuyerBtn.setVisible(true);
         billingResetBtnHandler();
@@ -328,7 +364,7 @@ public class BillingController {
 
     public void checkBuyersDetailsNotEmpty(){
         //add buyer as a new buyer and add him to the database
-        if(!buyersName.getText().isEmpty() && !buyersEmail.getText().isEmpty() && !buyersAddress.getText().isEmpty()){
+        if(!buyersName.getText().isEmpty()){
             String gender = "null";
             String mobile = buyersMobile.getText();
             String name = buyersName.getText();
@@ -342,7 +378,8 @@ public class BillingController {
         }
 
     }
-    public void saveInvoiceToDatabase(){
+    public boolean saveInvoiceToDatabase(){
+        boolean status = false;
         try {
             String customerName = buyersName.getText();
             String mobile = buyersMobile.getText();
@@ -352,12 +389,12 @@ public class BillingController {
             float sgst = cgstOrSgst();
             float taxablePrice = totalTaxablePrice();
 
-            dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNum, cgst, sgst, taxablePrice);
-
+            status = dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNum, cgst, sgst, taxablePrice);
             System.out.println("Invoice stored with number: " + invoiceNum);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return status;
     }
     public void invoicePDF(){
         //generate invoice pdf
