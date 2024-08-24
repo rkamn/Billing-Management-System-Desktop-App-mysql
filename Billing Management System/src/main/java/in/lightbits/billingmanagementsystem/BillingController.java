@@ -205,39 +205,8 @@ public class BillingController {
             customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Invalid Input", mobile+ " is not a valid mobile, Please count digits");
         }
     }
+
     public void handleFocusGainedBuyerMobile(MouseEvent mouseEvent) {
-//        String mobileNumber = buyersMobile.getText();
-//        ComboBox<Buyers> dropdown = new ComboBox<>();
-//        dropdown.setVisible(false);
-//        buyersMobile.focusedProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue) {
-//                // Focus gained, perform the search
-//               // String mobileNumber = buyersMobile.getText();
-//                ObservableList<Buyers> mobileResults = (ObservableList<Buyers>) dataBaseIntraction.getAllBuyersByMobileNumbers();
-//                dropdown.setItems(mobileResults);
-//                dropdown.setVisible(true);
-//
-//            }
-//        });
-//        buyersMobile.textProperty().addListener((observable, oldValue, newValue) ->{
-//            if(!newValue.isEmpty()){
-//                ObservableList<Buyers> filterBuyersNumbers = FXCollections.observableArrayList();
-//                for(Buyers buyer : dropdown.getItems()){
-//                    if(buyer.getMobile().startsWith(newValue)){
-//                        filterBuyersNumbers.add(buyer);
-//                    }
-//                }
-//                dropdown.setItems(filterBuyersNumbers);
-//                dropdown.show();
-//            }else {
-//                dropdown.hide();
-//            }
-//        });
-//        dropdown.valueProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                buyersMobile.setText(""+newValue);
-//            }
-//        });
     }
 
     public void handleFocusLostBuyerMobile(MouseEvent mouseEvent) {
