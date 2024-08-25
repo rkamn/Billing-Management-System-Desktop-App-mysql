@@ -247,7 +247,6 @@ public class BillingController {
                 System.out.println("Email : " + buyer.getEmail());
                 System.out.println("Address : " + buyer.getAddress());
 
-
                 buyersId = buyer.getId();
                 buyersMobile.setText(buyer.getMobile());
                 buyersName.setText(buyer.getName());

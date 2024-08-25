@@ -13,7 +13,7 @@
 <AnchorPane prefHeight="534.0" prefWidth="1131.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="in.lightbits.billingmanagementsystem.BillingController">
     <children>
         <!--maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" -->
-        <ImageView fitHeight="533.0" fitWidth="1157.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="533.0" fitWidth="1157.0" layoutX="1.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@icons/billingBackground.png" />
             </image>
@@ -33,12 +33,12 @@
 
         <Separator layoutX="235.0" layoutY="11.0" orientation="VERTICAL" prefHeight="69.0" prefWidth="6.0" />
 
-        <Label fx:id="myLabel8" layoutX="265.0" layoutY="12.0" text="N : " />
-        <Label fx:id="shopName" layoutX="284.0" layoutY="12.0" text="shopName" />
-        <Label fx:id="myLabel9" layoutX="264.0" layoutY="37.0" text="A : " />
-        <Label fx:id="shopAddress" layoutX="283.0" layoutY="37.0" text="shopAddress" />
-        <Label fx:id="myLabel18" layoutX="265.0" layoutY="62.0" text="GST No. : " />
-        <Label fx:id="gstValue" layoutX="326.0" layoutY="62.0" text="gst" />
+        <Label fx:id="myLabel8" layoutX="247.0" layoutY="12.0" text="N : " />
+        <Label fx:id="shopName" layoutX="266.0" layoutY="12.0" text="shopName" />
+        <Label fx:id="myLabel9" layoutX="246.0" layoutY="37.0" text="A : " />
+        <Label fx:id="shopAddress" layoutX="265.0" layoutY="37.0" text="shopAddress" />
+        <Label fx:id="myLabel18" layoutX="247.0" layoutY="62.0" text="GST No. : " />
+        <Label fx:id="gstValue" layoutX="308.0" layoutY="62.0" text="gst" />
 
         <TextField fx:id="invoiceOrMobile" layoutX="604.0" layoutY="56.0" onMouseClicked="#handleFocusGainedInvoice" onMouseExited="#handleFocusLostInvoice" prefHeight="26.0" prefWidth="167.0" promptText="invoice / mobile" />
         <Button fx:id="invoiceSearchBtn" layoutX="771.0" layoutY="56.0" mnemonicParsing="false" onAction="#invoiceSearchBtnHandler" prefHeight="26.0" prefWidth="98.0" text="Search" />
@@ -54,10 +54,10 @@
         </ImageView>
         <Label fx:id="myLabel3" layoutX="1032.0" layoutY="60.0" text="U: " />
         <Label fx:id="currentUser" layoutX="1048.0" layoutY="60.0" text="user" />
-        <Label fx:id="myLabel2" layoutX="892.0" layoutY="32.0" text="D :" />
-        <Label fx:id="todaysDate" layoutX="909.0" layoutY="32.0" text="date" />
-        <Label fx:id="myLabel1" layoutX="981.0" layoutY="32.0" text="T : " />
-        <Label fx:id="timeNow" layoutX="997.0" layoutY="32.0" text="time" />
+        <Label fx:id="myLabel2" layoutX="888.0" layoutY="16.0" text="D :" />
+        <Label fx:id="todaysDate" layoutX="905.0" layoutY="16.0" text="date" />
+        <Label fx:id="myLabel1" layoutX="889.0" layoutY="39.0" text="T : " />
+        <Label fx:id="timeNow" layoutX="905.0" layoutY="39.0" text="time" />
 
 
         <Separator layoutX="1.0" layoutY="87.0" prefHeight="5.0" prefWidth="1118.0" />
@@ -97,14 +97,14 @@
         <TextField fx:id="quantity" layoutX="547.0" layoutY="225.0" prefHeight="26.0" prefWidth="114.0" promptText="enter quantity" />
         <Label fx:id="myLabel1122" layoutX="43.0" layoutY="279.0" text="P_Id : " />
         <TextField fx:id="productId" layoutX="84.0" layoutY="275.0" prefHeight="26.0" prefWidth="98.0" promptText="prod id" />
-        <Label fx:id="myLabel1321" layoutX="751.0" layoutY="280.0" text="Status :" />
-        <TextField fx:id="status" layoutX="797.0" layoutY="276.0" prefHeight="26.0" prefWidth="114.0" promptText="active" />
+        <Label fx:id="myLabel1321" layoutX="757.0" layoutY="280.0" text="Status :" />
+        <TextField fx:id="status" layoutX="804.0" layoutY="276.0" prefHeight="26.0" prefWidth="107.0" promptText="active" />
         <Label fx:id="myLabel112" layoutX="202.0" layoutY="279.0" text="Price : " />
         <TextField fx:id="price" layoutX="243.0" layoutY="275.0" prefHeight="26.0" prefWidth="107.0" promptText="price" />
         <Label fx:id="myLabel1111" layoutX="376.0" layoutY="280.0" text="desc :" />
         <TextField fx:id="desc" layoutX="421.0" layoutY="276.0" prefHeight="26.0" prefWidth="107.0" promptText="description" />
-        <Label fx:id="myLabel1311" layoutX="546.0" layoutY="281.0" text="Tax slab(%) : " />
-        <TextField fx:id="taxRate" layoutX="611.0" layoutY="276.0" prefHeight="26.0" prefWidth="114.0" promptText="total tax %" />
+        <Label fx:id="myLabel1311" layoutX="546.0" layoutY="281.0" text="Tax slab(%): " />
+        <TextField fx:id="taxRate" layoutX="618.0" layoutY="276.0" prefHeight="26.0" prefWidth="107.0" promptText="total tax %" />
         <Button fx:id="addProductBtn" layoutX="935.0" layoutY="226.0" mnemonicParsing="false" onAction="#addProductBtnHandler" prefHeight="55.0" prefWidth="167.0" text="Add Product" />
 
 
@@ -137,9 +137,9 @@
         <TextField fx:id="paidAmount" layoutX="762.0" layoutY="394.0" prefHeight="26.0" prefWidth="147.0" promptText="paid amount" />
         <Label fx:id="myLabel10" layoutX="687.0" layoutY="428.0" text="Return Amt. :" />
         <TextField fx:id="returnedAmount" layoutX="762.0" layoutY="423.0" prefHeight="26.0" prefWidth="147.0" promptText="returned amount" />
-        <Button fx:id="saveBillingBtn" layoutX="938.0" layoutY="335.0" mnemonicParsing="false" onAction="#billingSaveBtnHandler" prefHeight="47.0" prefWidth="167.0" text="Save" />
-        <Button fx:id="resetBillingBtn" layoutX="938.0" layoutY="384.0" mnemonicParsing="false" onAction="#billingResetBtnHandler" prefHeight="26.0" prefWidth="167.0" text="Reset" />
-        <Button fx:id="closeBillingBtn" layoutX="938.0" layoutY="412.0" mnemonicParsing="false" onAction="#billingCloseBtnHandler" prefHeight="26.0" prefWidth="167.0" text="close" />
+        <Button fx:id="saveBillingBtn" layoutX="938.0" layoutY="335.0" mnemonicParsing="false" onAction="#billingSaveBtnHandler" prefHeight="55.0" prefWidth="167.0" text="Save" />
+        <Button fx:id="resetBillingBtn" layoutX="938.0" layoutY="394.0" mnemonicParsing="false" onAction="#billingResetBtnHandler" prefHeight="26.0" prefWidth="167.0" text="Reset" />
+        <Button fx:id="closeBillingBtn" layoutX="938.0" layoutY="424.0" mnemonicParsing="false" onAction="#billingCloseBtnHandler" prefHeight="26.0" prefWidth="167.0" text="close" />
 
 
 
