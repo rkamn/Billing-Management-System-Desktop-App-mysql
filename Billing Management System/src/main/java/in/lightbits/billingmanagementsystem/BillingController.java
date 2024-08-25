@@ -102,6 +102,10 @@ public class BillingController {
     private Label todaysDate;
     @FXML
     private Label timeNow;
+    @FXML
+    private TextField invoiceOrMobile;
+    @FXML
+    private Button invoiceSearchBtn;
 
     private int countAddProductBtn = 0;
 
@@ -188,12 +192,43 @@ public class BillingController {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedDate = currentDate.format(dateFormatter);
 
-        // Set the date to the lebel
+        // Set the date to the label
         if (todaysDate != null) {
             todaysDate.setText(formattedDate);
         }
     }
 
+    public void invoiceSearchBtnHandler(){
+        String invoiceOrMobileNumber = invoiceOrMobile.getText();
+        Invoices invoices;
+        if(invoiceOrMobileNumber.length() >=10){
+            invoices = dataBaseIntraction.searchInvoiceByMobileNumber(invoiceOrMobileNumber);
+        }else{
+            invoices = dataBaseIntraction.searchInvoiceByInvoiceNumber(invoiceOrMobileNumber);
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Invoice no.: ").append(invoices.getInvoice() + "\n");
+            stringBuilder.append("----------------------------\n");
+            stringBuilder.append("Invoicing Id: ").append(invoices.getId()).append("\n");
+            stringBuilder.append("Buyer Id : ").append(invoices.getBuyer_id()).append("\n");
+            stringBuilder.append("Purchase Date: ").append(invoices.getDate()).append("\n");
+            stringBuilder.append("Customer Name: ").append(invoices.getName()).append("\n");
+            stringBuilder.append("Customer Mobile: ").append(invoices.getMobile()).append("\n");
+            stringBuilder.append("Total Purchase Amount : ₹ ").append(invoices.getTotal()).append("\n");
+            stringBuilder.append("CGST Amount: ₹ ").append(invoices.getCgst()).append("\n");
+            stringBuilder.append("SGST Amount : ₹ ").append(invoices.getSgst()).append("\n");
+            stringBuilder.append("Total Taxable Amount: ₹").append(invoices.getTaxable_price()).append("\n");
+            stringBuilder.append("----------------------------\n");
+            stringBuilder.append("Thank you for your purchase!");
+
+            String invoiceHeader = generateInvoiceHeader();
+            String content = stringBuilder.toString();   //generateInvoice(productsObservableList);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Invoice-"+invoices.getInvoice());
+            alert.setHeaderText(invoiceHeader);
+            alert.setContentText(content);
+            alert.showAndWait();
+    }
 
     public void searchBuyerByMobileBtnHandler() {
 
@@ -639,7 +674,6 @@ public class BillingController {
         return invoiceHeader.toString();
     }
 
-
     public String generateInvoice(ObservableList<Products> productsObservableList){
 
         StringBuilder invoice = new StringBuilder();
@@ -779,7 +813,9 @@ public class BillingController {
     }
 
 
+    public void handleFocusGainedInvoice(MouseEvent mouseEvent) {
+    }
 
-
-
+    public void handleFocusLostInvoice(MouseEvent mouseEvent) {
+    }
 }
