@@ -133,7 +133,7 @@ public class BillingController {
 
     @FXML
     public void initialize() {
-        handleShopProfile();
+        handleShopProfile();// display shop details on UI
         handleUserProfileName();  // set username of logged in user
         currentTimeDateProfileImage(); // set current time and date and profile image
 
@@ -268,7 +268,7 @@ public class BillingController {
             System.out.println("Tax Slab : " + product.getTaxRate());
             System.out.println("Status : " + product.getStatus());
 
-            productId.setId(product.getId()+""); // making string due to error
+            productId.setText(product.getId()+""); // making string due to error
             price.setText(product.getPrice());
             desc.setText(product.getDescription());
             //quantity.setText(product.getQuantity()); // this quantity should be user input not DB quantity
@@ -322,7 +322,7 @@ public class BillingController {
 
         calculateTotalSummation();  // calculate your total amount
 
-        updateSoldProductQuantityInDatabase(productId.getId()); // update quantity in DB when order placed
+        updateSoldProductQuantityInDatabase(productId.getText()); // update quantity in DB when order placed
 
     }
 

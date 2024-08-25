@@ -20,20 +20,14 @@ import java.util.Optional;
 public class LoginController {
     @FXML
     private TextField usernameField;
-
-   // @FXML
     @FXML
     private PasswordField passwordField;
     @FXML
     private CheckBox showPasswordCheckBox;
-
     @FXML
     private Button loginButton;
-
     @FXML
     private Button closeButton;
-
-
     @FXML
     private String basePath="/in/lightbits/billingmanagementsystem/";
 
@@ -46,10 +40,12 @@ public class LoginController {
     }
 
     public void handlePasswordCheckBox(ActionEvent actionEvent) {
-        System.out.println("inside checkbox");
-        // write your logic here
         if(showPasswordCheckBox.isSelected()){
-            passwordField.setPromptText(passwordField.getText());
+            String password = passwordField.getText();
+            System.out.println("inside checkbox: "+password);
+            showPasswordCheckBox.setText(password);
+        }else {
+            showPasswordCheckBox.setText("Show Password");
         }
     }
 
@@ -82,7 +78,6 @@ public class LoginController {
     }
 
     public void handleClose(ActionEvent actionEvent) {
-
         customUtility.showAlertAskConfirmation();
     }
 
