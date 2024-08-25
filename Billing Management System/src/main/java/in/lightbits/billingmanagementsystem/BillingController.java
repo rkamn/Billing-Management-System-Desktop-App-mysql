@@ -124,7 +124,6 @@ public class BillingController {
     private ObservableList<Products> productsObservableList;
 
     Shop shop = dataBaseIntraction.getShopDetailsByShopPincode(shopPin);
-   // Buyers buyer = new Buyers();
     InvoiceNumberGenerator invoiceNumberGenerator = new InvoiceNumberGenerator();
     String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
 
@@ -133,6 +132,7 @@ public class BillingController {
 
     @FXML
     public void initialize() {
+        handleSopProfile();
         handleUserProfileName();  // set username of logged in user
         currentTimeDateProfileImage(); // set current time and date and profile image
 
@@ -152,6 +152,41 @@ public class BillingController {
 //        }
         productsObservableList = FXCollections.observableArrayList();
         productsTable.setItems(productsObservableList);
+    }
+    public void handleSopProfile(){
+        shopName.setText(shop.getShopName());
+        shopAddress.setText(shop.getShopAddress()+", "+shop.getShopPin()+", M: "+shop.getShopMobile());
+        gstValue.setText(shop.getShopGST()+" "+shop.getShopEmail());
+
+        System.out.println("Shop Name, Address & GST: "+shop.getShopName()+", "+shop.getShopAddress()+", "+shop.getShopPin()+", M: "+shop.getShopMobile()+", "+shop.getShopGST());
+    }
+
+    public void handleUserProfileName(){
+        String username = SessionManager.getInstance().getUsername();
+        Users user = dataBaseIntraction.getUsers(username);
+        if(username != null){
+            currentUser.setText(user.getFullName());
+        }
+        System.out.println("Current logged in User: "+user.getFullName());
+    }
+    public void currentTimeDateProfileImage(){
+        LocalTime currentTime = LocalTime.now();
+
+        // Format the time
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
+
+        // Set the time to the Label
+        timeNow.setText(formattedTime);
+
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedDate = currentDate.format(dateFormatter);
+
+        // Set the date to the lebel
+        if (todaysDate != null) {
+            todaysDate.setText(formattedDate);
+        }
     }
 
 
@@ -345,8 +380,26 @@ public class BillingController {
             mobileNotAvailableInDatabase = false;
         }else if(buyersName.getText().isEmpty()){
             customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Error", " One or more buyer's field is empty");
+            if(!mobileNotAvailableInDatabase){
+                System.out.println("You have not provided buyer's details..");
+                assignDefaultValueToBuyer();// assign default value
+            }
         }
+    }
+    public void assignDefaultValueToBuyer(){
+        Buyers buyer = dataBaseIntraction.getBuyerByMobileNumber("0XXXXXXXXXX");
+        buyersMobile.setText(buyer.getMobile());
+        buyersName.setText(buyer.getName());
+        buyersId = buyer.getId();
+        buyersEmail.setText(buyer.getEmail());
+        buyersAddress.setText(buyer.getAddress());
+        buyersAddress.setText(buyer.getGender());
 
+        System.out.println("Default ID : " + buyer.getId());
+        System.out.println("Default Name : " + buyer.getName());
+        System.out.println("Default Mobile : " + buyer.getMobile());
+        System.out.println("Default Email : " + buyer.getEmail());
+        System.out.println("Default Address : " + buyer.getAddress());
     }
     public boolean saveInvoiceToDatabase(){
         boolean status = false;
@@ -458,6 +511,8 @@ public class BillingController {
                 int xPos = 40;
                 float xPositionMul = 1.3f;
                 for (Products product : productsObservableList) {
+
+                    if(Integer.parseInt(product.getQuantity())==0){ continue; }
 
                     sNo++;
                     contentStream.beginText();
@@ -590,6 +645,7 @@ public class BillingController {
 
 
         for (Products product : productsObservableList) {
+            if(Integer.parseInt(product.getQuantity())==0){ continue; }
             invoice.append("Product: ").append(product.getName()).append("\n");
             invoice.append("Price per Unit: ₹").append(product.getPrice()).append("\n");
             invoice.append("Quantity: ").append(product.getQuantity()).append("\n");
@@ -718,34 +774,6 @@ public class BillingController {
     }
 
 
-    public void handleUserProfileName(){
-        String username = SessionManager.getInstance().getUsername();
-        Users user = dataBaseIntraction.getUsers(username);
-        if(username != null){
-           currentUser.setText(user.getFullName());
-        }
-        System.out.println("Current logged in User: "+user.getFullName());
-    }
-
-    public void currentTimeDateProfileImage(){
-        LocalTime currentTime = LocalTime.now();
-
-        // Format the time
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String formattedTime = currentTime.format(formatter);
-
-        // Set the time to the Label
-        timeNow.setText(formattedTime);
-
-        LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String formattedDate = currentDate.format(dateFormatter);
-
-        // Set the date to the lebel
-        if (todaysDate != null) {
-            todaysDate.setText(formattedDate);
-        }
-    }
 
 
 
