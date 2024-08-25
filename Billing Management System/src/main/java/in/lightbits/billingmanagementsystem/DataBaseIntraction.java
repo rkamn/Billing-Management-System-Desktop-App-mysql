@@ -46,6 +46,43 @@ public class DataBaseIntraction {
         return isAuthenticated;
     }
 
+    public Users getUsers(String username) {
+
+        Users user = new Users();
+        String sqlUserSelectQuery = "select * from billing_system.users where username = ? ";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+
+            try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                 PreparedStatement statement = con.prepareStatement(sqlUserSelectQuery)) {
+
+                statement.setString(1, username);
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    System.out.println("ID : " + id);
+
+                    user.setId(resultSet.getInt("id"));
+                    user.setFullName(resultSet.getString("name"));
+                    user.setUsername(resultSet.getString("username"));
+                    user.setMobile(resultSet.getString("mobile"));
+
+
+                    System.out.println("Name : " + user.getFullName());
+                    System.out.println("Mobile : " + user.getMobile());
+                    System.out.println("Email : " + user.getUsername());
+                    System.out.println("Id : " + user.getId());
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching data.");
+
+        }
+        return user;
+    }
 
     public Buyers getBuyerByMobileNumber(String mobile) {
 

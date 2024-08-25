@@ -443,8 +443,8 @@ public class BillingController {
 
                 // Draw the table headers
                 for (int i = 0; i < productDetails.length; i++) {
-                    contentStream.addRect(margin + i * (tableWidth / productDetails.length), yPosition - rowHeight,
-                            tableWidth / productDetails.length, rowHeight);
+//                    contentStream.addRect(margin + i * (tableWidth / productDetails.length), yPosition - rowHeight,
+//                            tableWidth / productDetails.length, rowHeight);
                     contentStream.beginText();
                     contentStream.newLineAtOffset(margin + i * (tableWidth / productDetails.length) + cellMargin,
                             yPosition-11);  // -15
@@ -458,10 +458,6 @@ public class BillingController {
                 int xPos = 40;
                 float xPositionMul = 1.3f;
                 for (Products product : productsObservableList) {
-//                    for (int j = 0; j < productDetails.length; j++) {
-//                        contentStream.addRect(margin + j * (tableWidth / productDetails.length), yPosition - rowHeight,
-//                                tableWidth / productDetails.length, rowHeight);
-//                    }
 
                     sNo++;
                     contentStream.beginText();
@@ -476,7 +472,7 @@ public class BillingController {
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 3 * xPositionMul, yPosition-11);  // SSN number
-                    contentStream.showText("HSNCODE" +sNo);
+                    contentStream.showText("HSN000" +sNo);
                     contentStream.endText();
 
                     int localTax = Integer.parseInt(product.getTaxRate());
@@ -724,10 +720,11 @@ public class BillingController {
 
     public void handleUserProfileName(){
         String username = SessionManager.getInstance().getUsername();
+        Users user = dataBaseIntraction.getUsers(username);
         if(username != null){
-            currentUser.setText(username);
+           currentUser.setText(user.getFullName());
         }
-        System.out.println("Current logged in User: "+username);
+        System.out.println("Current logged in User: "+user.getFullName());
     }
 
     public void currentTimeDateProfileImage(){
