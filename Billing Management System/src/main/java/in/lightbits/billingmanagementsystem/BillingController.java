@@ -152,6 +152,8 @@ public class BillingController {
 //        }
         productsObservableList = FXCollections.observableArrayList();
         productsTable.setItems(productsObservableList);
+
+        quantity.setText("1"); // assign defoult quantity to display
     }
     public void handleSopProfile(){
         shopName.setText(shop.getShopName());
