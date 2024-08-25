@@ -12,17 +12,19 @@ public class Users {
     private String username;
     private String password;
 
+    private String mobile;
+
 
     public Users(){
     }
 
-    public Users(int id, String fullName, String username, String password) {
+    public Users(int id, String fullName, String username, String password, String mobile) {
         this.id = id;
         this.fullName = fullName;
         this.username = username;
         this.password = password;
+        this.mobile = mobile;
     }
-
 
     public int getId() {
         return id;
@@ -56,10 +58,22 @@ public class Users {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "User{id=" + id + ", fullName='" + fullName + "', username='" + username + "'}";
+    public String getMobile() {
+        return mobile;
     }
 
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", mobile='" + mobile + '\'' +
+                '}';
+    }
 }

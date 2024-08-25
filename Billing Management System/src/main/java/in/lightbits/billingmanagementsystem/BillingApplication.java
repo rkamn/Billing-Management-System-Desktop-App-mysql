@@ -18,7 +18,7 @@ public class BillingApplication extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("login-view.fxml"));
         primaryStage.setTitle("Welcome..");
-        primaryStage.setScene(new Scene(root, 625, 385));
+        primaryStage.setScene(new Scene(root, 900, 400));
         primaryStage.show();
         System.out.println("show completed!");
 

@@ -102,12 +102,17 @@ public class BillingController {
     private Label todaysDate;
     @FXML
     private Label timeNow;
+    @FXML
+    private TextField invoiceOrMobile;
+    @FXML
+    private Button invoiceSearchBtn;
 
     private int countAddProductBtn = 0;
 
     private float totalAmt = 0;
     private float paidAmt = 0;
     private float returnedAmt = 0;
+    boolean mobileNotAvailableInDatabase = false;
 
 
     @FXML
@@ -123,15 +128,16 @@ public class BillingController {
     private ObservableList<Products> productsObservableList;
 
     Shop shop = dataBaseIntraction.getShopDetailsByShopPincode(shopPin);
-   // Buyers buyer = new Buyers();
     InvoiceNumberGenerator invoiceNumberGenerator = new InvoiceNumberGenerator();
     String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
+
 
     public BillingController() throws IOException {
     }
 
     @FXML
     public void initialize() {
+        handleShopProfile();// display shop details on UI
         handleUserProfileName();  // set username of logged in user
         currentTimeDateProfileImage(); // set current time and date and profile image
 
@@ -151,8 +157,78 @@ public class BillingController {
 //        }
         productsObservableList = FXCollections.observableArrayList();
         productsTable.setItems(productsObservableList);
+
+    }
+    public void handleShopProfile(){
+        shopName.setText(shop.getShopName());
+        shopAddress.setText(shop.getShopAddress()+", "+shop.getShopPin()+", M: "+shop.getShopMobile());
+        gstValue.setText(shop.getShopGST()+" "+shop.getShopEmail());
+
+        System.out.println("Shop Name, Address & GST: "+shop.getShopName()+", "+shop.getShopAddress()+", "+shop.getShopPin()+", M: "+shop.getShopMobile()+", "+shop.getShopGST());
+
+        //here this quantity is for product details
+        quantity.setText("1"); // assign default product quantity to display
     }
 
+    public void handleUserProfileName(){
+        String username = SessionManager.getInstance().getUsername();
+        Users user = dataBaseIntraction.getUsers(username);
+        if(username != null){
+            currentUser.setText(user.getFullName());
+        }
+        System.out.println("Current logged in User: "+user.getFullName());
+    }
+    public void currentTimeDateProfileImage(){
+        LocalTime currentTime = LocalTime.now();
+
+        // Format the time
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
+
+        // Set the time to the Label
+        timeNow.setText(formattedTime);
+
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedDate = currentDate.format(dateFormatter);
+
+        // Set the date to the label
+        if (todaysDate != null) {
+            todaysDate.setText(formattedDate);
+        }
+    }
+
+    public void invoiceSearchBtnHandler(){
+        String invoiceOrMobileNumber = invoiceOrMobile.getText();
+        Invoices invoices;
+        if(invoiceOrMobileNumber.length() >=10){
+            invoices = dataBaseIntraction.searchInvoiceByMobileNumber(invoiceOrMobileNumber);
+        }else{
+            invoices = dataBaseIntraction.searchInvoiceByInvoiceNumber(invoiceOrMobileNumber);
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Invoice no.: ").append(invoices.getInvoice() + "\n");
+            stringBuilder.append("----------------------------\n");
+            stringBuilder.append("Invoicing Id: ").append(invoices.getId()).append("\n");
+            stringBuilder.append("Buyer Id : ").append(invoices.getBuyer_id()).append("\n");
+            stringBuilder.append("Purchase Date: ").append(invoices.getDate()).append("\n");
+            stringBuilder.append("Customer Name: ").append(invoices.getName()).append("\n");
+            stringBuilder.append("Customer Mobile: ").append(invoices.getMobile()).append("\n");
+            stringBuilder.append("Total Purchase Amount : ₹ ").append(invoices.getTotal()).append("\n");
+            stringBuilder.append("CGST Amount: ₹ ").append(invoices.getCgst()).append("\n");
+            stringBuilder.append("SGST Amount : ₹ ").append(invoices.getSgst()).append("\n");
+            stringBuilder.append("Total Taxable Amount: ₹").append(invoices.getTaxable_price()).append("\n");
+            stringBuilder.append("----------------------------\n");
+            stringBuilder.append("Thank you for your purchase!");
+
+            String invoiceHeader = generateInvoiceHeader();
+            String content = stringBuilder.toString();   //generateInvoice(productsObservableList);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Invoice-"+invoices.getInvoice());
+            alert.setHeaderText(invoiceHeader);
+            alert.setContentText(content);
+            alert.showAndWait();
+    }
 
     public void searchBuyerByMobileBtnHandler() {
 
@@ -171,7 +247,6 @@ public class BillingController {
                 System.out.println("Email : " + buyer.getEmail());
                 System.out.println("Address : " + buyer.getAddress());
 
-
                 buyersId = buyer.getId();
                 buyersMobile.setText(buyer.getMobile());
                 buyersName.setText(buyer.getName());
@@ -182,18 +257,19 @@ public class BillingController {
                 buyersEmail.setEditable(false);
                 buyersAddress.setEditable(false);
 
+                mobileNotAvailableInDatabase =false; // meanse mobile number availavle in database
+
             }
         }
         else{
+
+            mobileNotAvailableInDatabase = true; // mobile not available in database status
+
             buyersMobile.setText(mobile);
 
             buyersName.setEditable(true);
             buyersEmail.setEditable(true);
             buyersAddress.setEditable(true);
-//
-//            buyersName.setText("");
-//            buyersEmail.setText("");
-//            buyersAddress.setText("");
 
             searchBuyerBtn.setVisible(true);
 
@@ -203,39 +279,8 @@ public class BillingController {
             customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Invalid Input", mobile+ " is not a valid mobile, Please count digits");
         }
     }
+
     public void handleFocusGainedBuyerMobile(MouseEvent mouseEvent) {
-//        String mobileNumber = buyersMobile.getText();
-//        ComboBox<Buyers> dropdown = new ComboBox<>();
-//        dropdown.setVisible(false);
-//        buyersMobile.focusedProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue) {
-//                // Focus gained, perform the search
-//               // String mobileNumber = buyersMobile.getText();
-//                ObservableList<Buyers> mobileResults = (ObservableList<Buyers>) dataBaseIntraction.getAllBuyersByMobileNumbers();
-//                dropdown.setItems(mobileResults);
-//                dropdown.setVisible(true);
-//
-//            }
-//        });
-//        buyersMobile.textProperty().addListener((observable, oldValue, newValue) ->{
-//            if(!newValue.isEmpty()){
-//                ObservableList<Buyers> filterBuyersNumbers = FXCollections.observableArrayList();
-//                for(Buyers buyer : dropdown.getItems()){
-//                    if(buyer.getMobile().startsWith(newValue)){
-//                        filterBuyersNumbers.add(buyer);
-//                    }
-//                }
-//                dropdown.setItems(filterBuyersNumbers);
-//                dropdown.show();
-//            }else {
-//                dropdown.hide();
-//            }
-//        });
-//        dropdown.valueProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                buyersMobile.setText(""+newValue);
-//            }
-//        });
     }
 
     public void handleFocusLostBuyerMobile(MouseEvent mouseEvent) {
@@ -257,7 +302,7 @@ public class BillingController {
             System.out.println("Tax Slab : " + product.getTaxRate());
             System.out.println("Status : " + product.getStatus());
 
-            productId.setId(product.getId()+""); // making string due to error
+            productId.setText(product.getId()+""); // making string due to error
             price.setText(product.getPrice());
             desc.setText(product.getDescription());
             //quantity.setText(product.getQuantity()); // this quantity should be user input not DB quantity
@@ -311,7 +356,7 @@ public class BillingController {
 
         calculateTotalSummation();  // calculate your total amount
 
-        updateSoldProductQuantityInDatabase(productId.getId()); // update quantity in DB when order placed
+        updateSoldProductQuantityInDatabase(productId.getText()); // update quantity in DB when order placed
 
     }
 
@@ -340,7 +385,7 @@ public class BillingController {
 
     public void billingSaveBtnHandler(ActionEvent actionEvent) throws IOException {
 
-       checkBuyersDetailsNotEmpty();  // checks buyer when mobile not available in database
+        checkBuyersDetailsNotEmpty();  // checks buyer when mobile not available in database
 
         paidAmountCalculation(); // paid and return amount calculation
 
@@ -349,7 +394,6 @@ public class BillingController {
         invoice();  // invoice display
 
         invoicePDF();  // invoice save in the computer
-
 
         saveInvoiceToDatabase();  // save invoice to database
 
@@ -364,19 +408,37 @@ public class BillingController {
 
     public void checkBuyersDetailsNotEmpty(){
         //add buyer as a new buyer and add him to the database
-        if(!buyersName.getText().isEmpty()){
-            String gender = "null";
+        if(!buyersName.getText().isEmpty() && mobileNotAvailableInDatabase){
+            //String gender = "null";
             String mobile = buyersMobile.getText();
             String name = buyersName.getText();
             String email = buyersEmail.getText();
             String address = buyersAddress.getText();
 
-            dataBaseIntraction.insertNewBuyersData(name,mobile,email,address,gender);
-        }else {
+            dataBaseIntraction.insertNewBuyersData(name,mobile,email,address,"");
+            mobileNotAvailableInDatabase = false;
+        }else if(buyersName.getText().isEmpty()){
             customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Error", " One or more buyer's field is empty");
-
+            if(!mobileNotAvailableInDatabase){
+                System.out.println("You have not provided buyer's details..");
+                assignDefaultValueToBuyer();// assign default value
+            }
         }
+    }
+    public void assignDefaultValueToBuyer(){
+        Buyers buyer = dataBaseIntraction.getBuyerByMobileNumber("0XXXXXXXXXX");
+        buyersMobile.setText(buyer.getMobile());
+        buyersName.setText(buyer.getName());
+        buyersId = buyer.getId();
+        buyersEmail.setText(buyer.getEmail());
+        buyersAddress.setText(buyer.getAddress());
+        buyersAddress.setText(buyer.getGender());
 
+        System.out.println("Default ID : " + buyer.getId());
+        System.out.println("Default Name : " + buyer.getName());
+        System.out.println("Default Mobile : " + buyer.getMobile());
+        System.out.println("Default Email : " + buyer.getEmail());
+        System.out.println("Default Address : " + buyer.getAddress());
     }
     public boolean saveInvoiceToDatabase(){
         boolean status = false;
@@ -388,6 +450,7 @@ public class BillingController {
             float cgst = cgstOrSgst();
             float sgst = cgstOrSgst();
             float taxablePrice = totalTaxablePrice();
+            buyersId = dataBaseIntraction.getBuyerByMobileNumber(mobile).getId();
 
             status = dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNum, cgst, sgst, taxablePrice);
             System.out.println("Invoice stored with number: " + invoiceNum);
@@ -472,8 +535,8 @@ public class BillingController {
 
                 // Draw the table headers
                 for (int i = 0; i < productDetails.length; i++) {
-                    contentStream.addRect(margin + i * (tableWidth / productDetails.length), yPosition - rowHeight,
-                            tableWidth / productDetails.length, rowHeight);
+//                    contentStream.addRect(margin + i * (tableWidth / productDetails.length), yPosition - rowHeight,
+//                            tableWidth / productDetails.length, rowHeight);
                     contentStream.beginText();
                     contentStream.newLineAtOffset(margin + i * (tableWidth / productDetails.length) + cellMargin,
                             yPosition-11);  // -15
@@ -487,10 +550,8 @@ public class BillingController {
                 int xPos = 40;
                 float xPositionMul = 1.3f;
                 for (Products product : productsObservableList) {
-//                    for (int j = 0; j < productDetails.length; j++) {
-//                        contentStream.addRect(margin + j * (tableWidth / productDetails.length), yPosition - rowHeight,
-//                                tableWidth / productDetails.length, rowHeight);
-//                    }
+
+                    if(Integer.parseInt(product.getQuantity())==0){ continue; }
 
                     sNo++;
                     contentStream.beginText();
@@ -505,12 +566,13 @@ public class BillingController {
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 3 * xPositionMul, yPosition-11);  // SSN number
-                    contentStream.showText("SSN000" +sNo);
+                    contentStream.showText("HSN000" +sNo);
                     contentStream.endText();
 
+                    int localTax = Integer.parseInt(product.getTaxRate());
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 4 * xPositionMul, yPosition-11); // product price exclusive taxes
-                    contentStream.showText("₹ " +(Float.parseFloat(product.getPrice()) -  (Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate())/100)));
+                    contentStream.showText("₹ " +(Float.parseFloat(product.getPrice()) - (Float.parseFloat(product.getPrice()) * localTax/100)));
                     contentStream.endText();
 
                     contentStream.beginText();
@@ -525,7 +587,7 @@ public class BillingController {
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 7 * xPositionMul, yPosition-11); // CGST amount
-                    contentStream.showText("₹ " + ((Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate()))/2) /100);
+                    contentStream.showText("₹ " + ((Float.parseFloat(product.getPrice()) * localTax)/2) /100);
                     contentStream.endText();
 
                     contentStream.beginText();
@@ -535,7 +597,7 @@ public class BillingController {
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 9 * xPositionMul, yPosition-11); //SGST amount
-                    contentStream.showText(" ₹ " + ((Float.parseFloat(product.getPrice()) * Float.parseFloat(product.getTaxRate()))/2) /100);
+                    contentStream.showText(" ₹ " + ((Float.parseFloat(product.getPrice()) * localTax )/2) /100);
                     contentStream.endText();
 
                     contentStream.beginText();
@@ -566,7 +628,6 @@ public class BillingController {
                 contentStream.showText("Thank you for your purchase!");
                 contentStream.endText();
 
-
                 contentStream.stroke();
                 contentStream.close();
 
@@ -579,7 +640,7 @@ public class BillingController {
     }
 
 
-    public void invoice() throws IOException {
+    public void invoice() {
        // String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
         String invoiceHeader = generateInvoiceHeader();
         String invoice = generateInvoice(productsObservableList);   // generate invoice to other page
@@ -612,7 +673,6 @@ public class BillingController {
         return invoiceHeader.toString();
     }
 
-
     public String generateInvoice(ObservableList<Products> productsObservableList){
 
         StringBuilder invoice = new StringBuilder();
@@ -623,6 +683,7 @@ public class BillingController {
 
 
         for (Products product : productsObservableList) {
+            if(Integer.parseInt(product.getQuantity())==0){ continue; }
             invoice.append("Product: ").append(product.getName()).append("\n");
             invoice.append("Price per Unit: ₹").append(product.getPrice()).append("\n");
             invoice.append("Quantity: ").append(product.getQuantity()).append("\n");
@@ -751,34 +812,9 @@ public class BillingController {
     }
 
 
-    public void handleUserProfileName(){
-        String username = SessionManager.getInstance().getUsername();
-        if(username != null){
-            currentUser.setText(username);
-        }
-        System.out.println("Current logged in User: "+username);
+    public void handleFocusGainedInvoice(MouseEvent mouseEvent) {
     }
 
-    public void currentTimeDateProfileImage(){
-        LocalTime currentTime = LocalTime.now();
-
-        // Format the time
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String formattedTime = currentTime.format(formatter);
-
-        // Set the time to the Label
-        timeNow.setText(formattedTime);
-
-        LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String formattedDate = currentDate.format(dateFormatter);
-
-        // Set the date to the lebel
-        if (todaysDate != null) {
-            todaysDate.setText(formattedDate);
-        }
+    public void handleFocusLostInvoice(MouseEvent mouseEvent) {
     }
-
-
-
 }

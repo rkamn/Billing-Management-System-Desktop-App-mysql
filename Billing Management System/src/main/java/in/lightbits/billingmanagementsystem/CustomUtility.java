@@ -51,13 +51,13 @@ public class CustomUtility {
 
         // Process the user's response
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            System.out.println("User chose Yes.");
+            System.out.println("User choose Yes.");
             //exit application
             javafx.application.Platform.exit();
             System.exit(0);
 
         } else {
-            System.out.println("User chose No.");
+            System.out.println("User choose No.");
         }
     }
 

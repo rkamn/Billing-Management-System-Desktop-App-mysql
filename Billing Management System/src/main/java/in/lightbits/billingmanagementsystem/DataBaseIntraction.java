@@ -46,6 +46,43 @@ public class DataBaseIntraction {
         return isAuthenticated;
     }
 
+    public Users getUsers(String username) {
+
+        Users user = new Users();
+        String sqlUserSelectQuery = "select * from billing_system.users where username = ? ";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+
+            try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                 PreparedStatement statement = con.prepareStatement(sqlUserSelectQuery)) {
+
+                statement.setString(1, username);
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    System.out.println("ID : " + id);
+
+                    user.setId(resultSet.getInt("id"));
+                    user.setFullName(resultSet.getString("name"));
+                    user.setUsername(resultSet.getString("username"));
+                    user.setMobile(resultSet.getString("mobile"));
+
+
+                    System.out.println("Name : " + user.getFullName());
+                    System.out.println("Mobile : " + user.getMobile());
+                    System.out.println("Email : " + user.getUsername());
+                    System.out.println("Id : " + user.getId());
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching data.");
+
+        }
+        return user;
+    }
 
     public Buyers getBuyerByMobileNumber(String mobile) {
 
@@ -65,7 +102,7 @@ public class DataBaseIntraction {
                     int id = resultSet.getInt("id");
                     System.out.println("ID : " + id);
 
-                    //buyer.setId(resultSet.getInt("id"));
+                    buyer.setId(resultSet.getInt("id"));
                     buyer.setName(resultSet.getString("name"));
                     buyer.setMobile(resultSet.getString("mobile"));
                     buyer.setEmail(resultSet.getString("email"));
@@ -346,5 +383,137 @@ public class DataBaseIntraction {
     }
 
 
+    public Invoices searchInvoiceByMobileNumber(String mobile) {
+        Invoices invoices = new Invoices();
+        String sqlBayerSelectQuery = "select * from billing_system.invoices where mobile = ? ";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
+
+            try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                 PreparedStatement statement = con.prepareStatement(sqlBayerSelectQuery)) {
+
+                statement.setString(1, mobile);
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    System.out.println("ID : " + id);
+
+                    invoices.setId(resultSet.getInt("id"));
+                    invoices.setBuyer_id(resultSet.getInt("buyer_id"));
+                    invoices.setName(resultSet.getString("name"));
+                    invoices.setMobile(resultSet.getString("mobile"));
+                    invoices.setTotal(resultSet.getDouble("total"));
+                    invoices.setDate(resultSet.getString("date"));
+                    invoices.setInvoice(resultSet.getString("invoice"));
+                    invoices.setCgst(resultSet.getDouble("cgst"));
+                    invoices.setSgst(resultSet.getDouble("sgst"));
+                    invoices.setTaxable_price(resultSet.getDouble("taxable_price"));
+
+                    System.out.println("Id : " + invoices.getId());
+                    System.out.println("Buyer_id : " + invoices.getBuyer_id());
+                    System.out.println("Name : " + invoices.getName());
+                    System.out.println("Mobile : " + invoices.getMobile());
+                    System.out.println("Email : " + invoices.getTotal());
+                    System.out.println("Gender : " + invoices.getDate());
+                    System.out.println("Address : " + invoices.getInvoice());
+                    System.out.println("Email : " + invoices.getCgst());
+                    System.out.println("Gender : " + invoices.getSgst());
+                    System.out.println("Address : " + invoices.getTaxable_price());
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching data.");
+
+        }
+        return invoices;
+    }
+
+
+    public Invoices searchInvoiceByInvoiceNumber(String invoice) {
+        Invoices invoices = new Invoices();
+        String sqlInvoicesSelectQuery = "select * from billing_system.invoices where invoice = ? ";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+
+            try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                 PreparedStatement statement = con.prepareStatement(sqlInvoicesSelectQuery)) {
+
+                statement.setString(1, invoice);
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    System.out.println("ID : " + id);
+
+                    invoices.setId(resultSet.getInt("id"));
+                    invoices.setBuyer_id(resultSet.getInt("buyer_id"));
+                    invoices.setName(resultSet.getString("name"));
+                    invoices.setMobile(resultSet.getString("mobile"));
+                    invoices.setTotal(resultSet.getDouble("total"));
+                    invoices.setDate(resultSet.getString("date"));
+                    invoices.setInvoice(resultSet.getString("invoice"));
+                    invoices.setCgst(resultSet.getDouble("cgst"));
+                    invoices.setSgst(resultSet.getDouble("sgst"));
+                    invoices.setTaxable_price(resultSet.getDouble("taxaple_price"));
+
+                    System.out.println("Id : " + invoices.getId());
+                    System.out.println("Buyer_id : " + invoices.getBuyer_id());
+                    System.out.println("Name : " + invoices.getName());
+                    System.out.println("Mobile : " + invoices.getMobile());
+                    System.out.println("Email : " + invoices.getTotal());
+                    System.out.println("Gender : " + invoices.getDate());
+                    System.out.println("Address : " + invoices.getInvoice());
+                    System.out.println("Email : " + invoices.getCgst());
+                    System.out.println("Gender : " + invoices.getSgst());
+                    System.out.println("Address : " + invoices.getTaxable_price());
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching data.");
+
+        }
+        return invoices;
+    }
+
+    public Buyers getBuyerById(int id){
+
+
+        Buyers buyer = new Buyers();
+        String sqlBayerSelectQuery = "select * from billing_system.buyers where id = ? ";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+
+            try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                 PreparedStatement statement = con.prepareStatement(sqlBayerSelectQuery)) {
+
+                statement.setInt(1, id);
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    buyer.setId(resultSet.getInt("id"));
+                    buyer.setName(resultSet.getString("name"));
+                    buyer.setMobile(resultSet.getString("mobile"));
+                    buyer.setEmail(resultSet.getString("email"));
+                    buyer.setGender(resultSet.getString("gender"));
+                    buyer.setAddress(resultSet.getString("address"));
+
+                    System.out.println("Name : " + buyer.getName());
+                    System.out.println("Mobile : " + buyer.getMobile());
+                    System.out.println("Email : " + buyer.getEmail());
+                    System.out.println("Gender : " + buyer.getGender());
+                    System.out.println("Address : " + buyer.getAddress());
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching data.");
+        }
+        return buyer;
+    }
 }
