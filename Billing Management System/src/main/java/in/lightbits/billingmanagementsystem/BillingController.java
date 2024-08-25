@@ -127,12 +127,13 @@ public class BillingController {
     InvoiceNumberGenerator invoiceNumberGenerator = new InvoiceNumberGenerator();
     String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
 
+
     public BillingController() throws IOException {
     }
 
     @FXML
     public void initialize() {
-        handleSopProfile();
+        handleShopProfile();
         handleUserProfileName();  // set username of logged in user
         currentTimeDateProfileImage(); // set current time and date and profile image
 
@@ -153,14 +154,16 @@ public class BillingController {
         productsObservableList = FXCollections.observableArrayList();
         productsTable.setItems(productsObservableList);
 
-        quantity.setText("1"); // assign defoult quantity to display
     }
-    public void handleSopProfile(){
+    public void handleShopProfile(){
         shopName.setText(shop.getShopName());
         shopAddress.setText(shop.getShopAddress()+", "+shop.getShopPin()+", M: "+shop.getShopMobile());
         gstValue.setText(shop.getShopGST()+" "+shop.getShopEmail());
 
         System.out.println("Shop Name, Address & GST: "+shop.getShopName()+", "+shop.getShopAddress()+", "+shop.getShopPin()+", M: "+shop.getShopMobile()+", "+shop.getShopGST());
+
+        //here this quantity is for product details
+        quantity.setText("1"); // assign default product quantity to display
     }
 
     public void handleUserProfileName(){
