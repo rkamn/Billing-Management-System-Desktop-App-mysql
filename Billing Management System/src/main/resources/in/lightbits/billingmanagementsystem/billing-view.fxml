@@ -44,7 +44,7 @@
         <Button fx:id="invoiceSearchBtn" layoutX="771.0" layoutY="56.0" mnemonicParsing="false" onAction="#invoiceSearchBtnHandler" prefHeight="26.0" prefWidth="98.0" text="Search" />
 
 
-        
+
         <Separator layoutX="876.0" layoutY="13.0" orientation="VERTICAL" prefHeight="69.0" prefWidth="6.0" />
         <ImageView fitHeight="37.0" fitWidth="38.0" layoutX="1054.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
             <image>
