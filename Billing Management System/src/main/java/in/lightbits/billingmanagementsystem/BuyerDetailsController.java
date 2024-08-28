@@ -15,11 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BuyerDetailsController {
-
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/billing_system";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "rakesh458458";
-
     @FXML
     private Button printBtn;
     @FXML
@@ -27,29 +22,22 @@ public class BuyerDetailsController {
 
     @FXML
     private TableView<Buyers> buyersTable;
-
     @FXML
     private TableColumn<Buyers, Integer> buyersId ;
     @FXML
     private TableColumn<Buyers, String> buyersName ;
-
     @FXML
     private TableColumn<Buyers, String> buyersMobile;
-
     @FXML
     private TableColumn<Buyers, String> buyersEmail;
     @FXML
     private TableColumn<Buyers, String> buyersGender;
-
     @FXML
     private TableColumn<Buyers, String> buyersAddress;
-    private int bid;
     @FXML
     private String basePath="/in/lightbits/billingmanagementsystem/";
     CustomUtility customUtility = new CustomUtility();
-    //DataBaseIntraction dataBaseIntraction = new DataBaseIntraction();
-
-    List<Buyers> buyers = new ArrayList<>();
+    DataBaseIntraction dataBaseIntraction = new DataBaseIntraction();
 
     @FXML
     public void initialize() {
@@ -62,81 +50,47 @@ public class BuyerDetailsController {
         buyersAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
 
         // populate data in the table
-        ObservableList<Buyers> observableBuyersList = FXCollections.observableArrayList(getAllBuyersDetails());
+        ObservableList<Buyers> observableBuyersList = FXCollections.observableArrayList(dataBaseIntraction.getAllBuyersDetails());
         for(Buyers buyer : observableBuyersList){  // printing in buyer details in console
             System.out.println(buyer.getId()+"----"+buyer.getName()+"---"+buyer.getMobile());
         }
         buyersTable.setItems(observableBuyersList);
-
     }
 
-
-
-
-    public List<Buyers> getAllBuyersDetails() {
-        String getAllBuyersQuery = "SELECT id, name, mobile, email,gender, address FROM billing_system.buyers";
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-                 Statement stmt = conn.createStatement();
-                 ResultSet rs = stmt.executeQuery(getAllBuyersQuery)) {
-
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    System.out.println(id);
-                    String name = rs.getString("name");
-                    String mobile = rs.getString("mobile");
-                    String email = rs.getString("email");
-                    String gender = rs.getString("gender");
-                    String address = rs.getString("address");
-//
-//                    buyersId.setText(String.valueOf(rs.getInt("id")));
-//                    buyersName.setText(rs.getString("name"));
-//                    buyersMobile.setText(rs.getString("mobile"));
-//                    buyersEmail.setText(rs.getString("email"));
-//                    buyersEmail.setText(rs.getString("gender"));
-//                    buyersAddress.setText(rs.getString("address"));
-
-                    buyers.add(new Buyers(id, name, mobile, email, gender, address));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return buyers;
-    }
-
-    public boolean printAllBuyersOnA4(){
-
-
-
-        return true;
-    }
     public void printBtnHandler(ActionEvent actionEvent) {
+        boolean success = false;
+        List<Buyers> buyersList =  dataBaseIntraction.getAllBuyersDetails();
+        if(!buyersList.isEmpty()){
+            for(Buyers buyer : buyersList){
 
-        getAllBuyersDetails();
+                    buyersId.setText(buyer.getId()+"");
+                    buyersName.setText(buyer.getName());
+                    buyersMobile.setText(buyer.getMobile());
+                    buyersEmail.setText(buyer.getEmail());
+                    buyersEmail.setText(buyer.getGender());
+                    buyersAddress.setText(buyer.getAddress());
 
-        boolean success = printAllBuyersOnA4();
+                System.out.println("Buyer ID : " + buyer.getId());
+                System.out.println("Name : " + buyer.getName());
+                System.out.println("Mobile : " + buyer.getMobile());
+                System.out.println("Email : " + buyer.getEmail());
+                System.out.println("Gender : " + buyer.getGender());
+                System.out.println("Address : " + buyer.getAddress());
+            }
+            success = true;
+        }
         System.out.println("inside print all buyers ..");
-
         if (success) {
             customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION,"Success", "Buyers detail printed successfully.");
         } else {
             customUtility.showAlertActionStatus(Alert.AlertType.WARNING, "Error", "Failed to print buyers information.");
         }
-
-
-
     }
 
     public void closeBtnHandler(ActionEvent actionEvent) {
         System.out.println(actionEvent.getEventType() + ": closeBtnHandler ");
         customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Closing Bayer Details Page..", "Thank you!!");
-
         // navigation to home-view.fxml
         customUtility.navigationToNewPage(closeBtn, basePath+"home-view.fxml");
-
     }
 }

@@ -84,6 +84,37 @@ public class DataBaseIntraction {
         return user;
     }
 
+
+    public List<Buyers> getAllBuyersDetails() {
+        List<Buyers> buyers = new ArrayList<>();
+        String getAllBuyersQuery = "SELECT id, name, mobile, email,gender, address FROM billing_system.buyers";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(getAllBuyersQuery)) {
+
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    System.out.println(id);
+                    String name = rs.getString("name");
+                    String mobile = rs.getString("mobile");
+                    String email = rs.getString("email");
+                    String gender = rs.getString("gender");
+                    String address = rs.getString("address");
+
+                    buyers.add(new Buyers(id, name, mobile, email, gender, address));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return buyers;
+    }
+
+
     public Buyers getBuyerByMobileNumber(String mobile) {
 
         Buyers buyer = new Buyers();
@@ -119,7 +150,6 @@ public class DataBaseIntraction {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching data.");
-
         }
         return buyer;
     }
@@ -130,7 +160,6 @@ public class DataBaseIntraction {
         String shopQuery = "select * from billing_system.shop where pincode = ? ";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-
 
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                  PreparedStatement statement = con.prepareStatement(shopQuery)) {
@@ -230,7 +259,6 @@ public class DataBaseIntraction {
 
     //update existing buyer by id
     public boolean updateBuyerById(int id, String name, String mobile, String email, String address, String gender) {
-        //String updateBuyerQuery =   "INSERT INTO billing_system.buyers ( id, name, mobile, email, gender) values (?,?,?,?,?)";
         String updateBuyerQuery = "UPDATE billing_system.buyers SET name = ?, mobile = ?, email = ?, address = ? ,gender = ? WHERE id = ?";
 
         try {
@@ -249,7 +277,6 @@ public class DataBaseIntraction {
             }
         } catch (Exception e) {
             e.printStackTrace();
-          //  return  false;
         }
         return true;
     }
