@@ -8,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
-import org.apache.pdfbox.jbig2.segments.Table;
 import org.apache.pdfbox.pdmodel.font.*;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
