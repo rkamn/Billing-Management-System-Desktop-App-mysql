@@ -8,8 +8,8 @@ module in.lightbits.billingmanagementsystem {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
-    requires pdfbox.app;
-    //requires org.apache.pdfbox;
+    //requires pdfbox.app;
+    requires org.apache.pdfbox;
     // requires eu.hansolo.tilesfx;
 
     opens in.lightbits.billingmanagementsystem to javafx.fxml;

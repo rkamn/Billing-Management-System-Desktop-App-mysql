@@ -6,7 +6,8 @@
 
     <groupId>in.lightbits</groupId>
     <artifactId>BillingManagementSystem</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
+<!--    <version>1.0-SNAPSHOT</version>-->
     <name>Billing Management System</name>
 
     <properties>
@@ -39,6 +40,11 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.3</version> <!-- Replace with your version -->
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
@@ -101,14 +107,23 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>18</release> <!-- Ensure this matches your Java version -->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifest>
                             <mainClass>
-                                in.lightbits.billingmanagementsystem/in.lightbits.billingmanagementsystem.BillingApplication
-                            </mainClass> <!-- Replace with your main class -->
+<!--                                in.lightbits.billingmanagementsystem/-->
+                                in.lightbits.billingmanagementsystem.BillingApplication
+                            </mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -132,7 +147,8 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                in.lightbits.billingmanagementsystem/in.lightbits.billingmanagementsystem.BillingApplication
+<!--                                in.lightbits.billingmanagementsystem/-->
+                                in.lightbits.billingmanagementsystem.BillingApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
