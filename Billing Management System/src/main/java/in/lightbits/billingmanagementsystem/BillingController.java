@@ -256,7 +256,7 @@ public class BillingController {
                 buyersEmail.setEditable(false);
                 buyersAddress.setEditable(false);
 
-                mobileNotAvailableInDatabase =false; // meanse mobile number availavle in database
+                mobileNotAvailableInDatabase =false; // means mobile number available in database
 
             }
         }
