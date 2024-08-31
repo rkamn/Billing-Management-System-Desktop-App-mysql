@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import org.apache.pdfbox.pdmodel.font.*;
@@ -135,6 +136,9 @@ public class BillingController {
     String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
     MobileNumberValidation mobileNumberValidation = new MobileNumberValidation();
 
+    ContextMenu suggestionsPopup = new ContextMenu();
+
+
     public BillingController() throws IOException {
     }
 
@@ -162,6 +166,7 @@ public class BillingController {
         productsTable.setItems(productsObservableList);
 
     }
+
     public void handleShopProfile(){
         shopName.setText(shop.getShopName());
         shopAddress.setText(shop.getShopAddress()+", "+shop.getShopPin()+", M: "+shop.getShopMobile());
@@ -758,7 +763,7 @@ public class BillingController {
 
     public void billingCloseBtnHandler(ActionEvent actionEvent) {
         System.out.println(actionEvent.getEventType() + ": closeBtnHandler ");
-        customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Closing Update Bayer Page..", "Thank you!!");
+        customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Closing..", "closing page..., Thank you!!");
         // navigation to home-view.fxml
         customUtility.navigationToNewPage(closeBillingBtn, basePath+"home-view.fxml");
     }
@@ -840,8 +845,66 @@ public class BillingController {
 
 
     public void handleFocusGainedInvoice(MouseEvent mouseEvent) {
+
     }
 
     public void handleFocusLostInvoice(MouseEvent mouseEvent) {
+    }
+
+    public void handleFocusGainedProductName(MouseEvent mouseEvent) {
+        System.out.println("inside focus gain");
+        productName.setPromptText("start typing...");
+        productName.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            String input = productName.getText();
+            if(input.length() >= 3){
+                System.out.println("inside event...");
+                showSuggestions(productName, input);
+            } else {
+                // Hide suggestions if input length is 3 or less
+                suggestionsPopup.hide();
+            }
+        });
+    }
+
+    public void productAutoSuggestion(){
+        productName.setPromptText("start typing...");
+        productName.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            String input = productName.getText();
+            if(input.length() >= 3){
+
+                showSuggestions(productName, input);
+            } else {
+                // Hide suggestions if input length is 3 or less
+                suggestionsPopup.hide();
+            }
+        });
+    }
+    private void showSuggestions(TextField productName, String input) {
+        ObservableList<CustomMenuItem> menuItems = FXCollections.observableArrayList();
+        for (Products product : productsObservableList) {
+            if (product.getName().toLowerCase().contains(input.toLowerCase())) {
+                Label suggestionLabel = new Label(product.getName());
+                CustomMenuItem item = new CustomMenuItem(suggestionLabel,true);
+                item.setOnAction(event -> {
+                    // Set the text to the selected suggestion and hide the popup
+                    productName.setText(product.getName());
+                    suggestionsPopup.hide();
+                });
+                menuItems.add(item);
+            }
+        }
+        // If there are no matching suggestions, hide the popup
+        if (menuItems.isEmpty()) {
+            suggestionsPopup.hide();
+        } else {
+            suggestionsPopup.getItems().clear();
+            suggestionsPopup.getItems().addAll(menuItems);
+            if (!suggestionsPopup.isShowing()) {
+                suggestionsPopup.show(productName, productName.getLayoutX(), productName.getLayoutY() + productName.getHeight());
+            }
+        }
+    }
+
+    public void handleFocusLostProductName(MouseEvent mouseEvent) {
     }
 }

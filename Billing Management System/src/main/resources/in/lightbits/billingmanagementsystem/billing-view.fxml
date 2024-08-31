@@ -39,7 +39,6 @@
         <Label fx:id="shopAddress" layoutX="265.0" layoutY="37.0" text="shopAddress" />
         <Label fx:id="myLabel18" layoutX="247.0" layoutY="62.0" text="GST No. : " />
         <Label fx:id="gstValue" layoutX="308.0" layoutY="62.0" text="gst" />
-
         <TextField fx:id="invoiceOrMobile" layoutX="604.0" layoutY="56.0" onMouseClicked="#handleFocusGainedInvoice" onMouseExited="#handleFocusLostInvoice" prefHeight="26.0" prefWidth="167.0" promptText="invoice / mobile" />
         <Button fx:id="invoiceSearchBtn" layoutX="771.0" layoutY="56.0" mnemonicParsing="false" onAction="#invoiceSearchBtnHandler" prefHeight="26.0" prefWidth="98.0" text="Search" />
 
@@ -100,7 +99,7 @@
             </image>
         </ImageView>
         <Label fx:id="myLabel1121" layoutX="189.0" layoutY="231.0" text="Name : " />
-        <TextField fx:id="productName" layoutX="238.0" layoutY="227.0" prefHeight="26.0" prefWidth="224.0" promptText="search product name here" />
+        <TextField fx:id="productName" layoutX="238.0" layoutY="227.0" onMouseClicked="#handleFocusGainedProductName" onMouseExited="#handleFocusLostProductName" prefHeight="26.0" prefWidth="224.0" promptText="search product name here" />
         <Label fx:id="myLabel132" layoutX="482.0" layoutY="229.0" text="Quantity :" />
         <TextField fx:id="quantity" layoutX="547.0" layoutY="225.0" prefHeight="26.0" prefWidth="114.0" promptText="enter quantity" />
         <Label fx:id="myLabel1122" layoutX="43.0" layoutY="279.0" text="Id : " />

@@ -87,49 +87,49 @@ public class HomeController extends VBox {
     CustomUtility customUtility = new CustomUtility();
 
 
-    @FXML
-    private void initialize() {
-        // Ensure the button is invisible initially
-        if (btnHome != null) {
-            btnNewBuyer.setVisible(false);
-            btnUpdateBuyer.setVisible(false);
-            btnBuyerDetails.setVisible(false);
-            btnDeleteBuyer.setVisible(false);
-            btnNewProduct.setVisible(false);
-            btnUpdateProduct.setVisible(false);
-            btnProductDetails.setVisible(false);
-            btnDeleteProduct.setVisible(false);
-            btnBilling.setVisible(false);
-            btnLogout.setVisible(false);
-            btnCloseApplication.setVisible(false);
-
-            myLabel1.setVisible(false);
-            myLabel2.setVisible(false);
-            myLabel3.setVisible(false);
-            myLabel4.setVisible(false);
-            myLabel5.setVisible(false);
-            myLabel6.setVisible(false);
-            myLabel7.setVisible(false);
-            myLabel8.setVisible(true);  // Home text
-            myLabel9.setVisible(false);
-            myLabel10.setVisible(false);
-            myLabel11.setVisible(false);
-            myLabel12.setVisible(false);
-            myLabel13.setVisible(false);
-            myLabel14.setVisible(false);
-            myLabel15.setVisible(false);
-            myLabel16.setVisible(false);
-            myLabel17.setVisible(false);
-            myLabel18.setVisible(false);
-            myLabel19.setVisible(false);
-            myLabel20.setVisible(false);
-            myLabel21.setVisible(false);
-
-        } else {
-            System.err.println("Button reference is null.");
-        }
-    }
-
+//    @FXML
+//    private void initialize() {
+//        // Ensure the button is invisible initially
+//        if (btnHome != null) {
+//            btnNewBuyer.setVisible(false);
+//            btnUpdateBuyer.setVisible(false);
+//            btnBuyerDetails.setVisible(false);
+//            btnDeleteBuyer.setVisible(false);
+//            btnNewProduct.setVisible(false);
+//            btnUpdateProduct.setVisible(false);
+//            btnProductDetails.setVisible(false);
+//            btnDeleteProduct.setVisible(false);
+//            btnBilling.setVisible(false);
+//            btnLogout.setVisible(false);
+//            btnCloseApplication.setVisible(false);
+//
+//            myLabel1.setVisible(false);
+//            myLabel2.setVisible(false);
+//            myLabel3.setVisible(false);
+//            myLabel4.setVisible(false);
+//            myLabel5.setVisible(false);
+//            myLabel6.setVisible(false);
+//            myLabel7.setVisible(false);
+//            myLabel8.setVisible(true);  // Home text
+//            myLabel9.setVisible(false);
+//            myLabel10.setVisible(false);
+//            myLabel11.setVisible(false);
+//            myLabel12.setVisible(false);
+//            myLabel13.setVisible(false);
+//            myLabel14.setVisible(false);
+//            myLabel15.setVisible(false);
+//            myLabel16.setVisible(false);
+//            myLabel17.setVisible(false);
+//            myLabel18.setVisible(false);
+//            myLabel19.setVisible(false);
+//            myLabel20.setVisible(false);
+//            myLabel21.setVisible(false);
+//
+//        } else {
+//            System.err.println("Button reference is null.");
+//        }
+//    }
+//
 
 
 
