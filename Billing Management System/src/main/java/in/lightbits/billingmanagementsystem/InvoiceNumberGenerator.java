@@ -13,6 +13,7 @@ public class InvoiceNumberGenerator {
     private static final String LAST_NUMBER_FILE = "last_invoice_number.pdf";
 
     // Method to generate the next invoice number
+
     public static String generateInvoiceNumber() throws IOException {
         // Get the current year as a string
         String year = String.valueOf(LocalDate.now().getYear());

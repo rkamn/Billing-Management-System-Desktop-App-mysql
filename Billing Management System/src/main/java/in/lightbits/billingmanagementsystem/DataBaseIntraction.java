@@ -302,10 +302,9 @@ public class DataBaseIntraction {
 
 
 
-
     //insert new buyer entry to db
     public void insertNewBuyersData(String name, String mobile, String email, String address, String gender) {
-        String insertNewBuyerSQLQuery =   "INSERT INTO billing_system.buyers ( name, mobile, email,address, gender) values (?,?,?,?,?)";
+        String insertNewBuyerSQLQuery =   "INSERT INTO billing_system.buyers ( name, mobile, email, address, gender) values (?,?,?,?,?)";
 
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -325,9 +324,9 @@ public class DataBaseIntraction {
     }
 
 
-    public boolean storeInvoiceDataToDatabase(int buyer_id, String name, String mobile , float total, LocalDate date, String invoice, float cgst, float sgst, float taxable_price) {
+    public boolean storeInvoiceDataToDatabase(int buyer_id, String name, String mobile , float total, LocalDate date, String invoice, float cgst, float sgst, float taxable_price, float discount) {
         boolean status = false;
-        String invoiceInsertQuery = "INSERT INTO invoices (buyer_id, name, mobile, total, date, invoice, cgst, sgst, taxable_price) VALUES (?, ?, ?, ?, ?,?,?,?, ?)";
+        String invoiceInsertQuery = "INSERT INTO invoices (buyer_id, name, mobile, total, date, invoice, cgst, sgst, taxable_price,discount) VALUES (?, ?, ?, ?, ?,?,?,?,?, ?)";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -343,6 +342,7 @@ public class DataBaseIntraction {
                 statement.setDouble(7, cgst);
                 statement.setDouble(8, sgst);
                 statement.setDouble(9, taxable_price);
+                statement.setDouble(10, discount);
 
                 statement.executeUpdate();
                 status = true;
@@ -409,7 +409,9 @@ public class DataBaseIntraction {
 
     public Invoices searchInvoiceByMobileNumber(String mobile) {
         Invoices invoices = new Invoices();
-        String sqlBayerSelectQuery = "select * from billing_system.invoices where mobile = ? ";
+
+        //String sqlBayerSelectQuery = "select * from billing_system.invoices where mobile = ? ";
+        String sqlBayerSelectQuery = "select * from billing_system.invoices where mobile = ? ORDER BY id DESC LIMIT 1";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -481,7 +483,8 @@ public class DataBaseIntraction {
                     invoices.setInvoice(resultSet.getString("invoice"));
                     invoices.setCgst(resultSet.getDouble("cgst"));
                     invoices.setSgst(resultSet.getDouble("sgst"));
-                    invoices.setTaxable_price(resultSet.getDouble("taxaple_price"));
+                    invoices.setTaxable_price(resultSet.getDouble("taxable_price"));
+                    invoices.setDiscount(resultSet.getDouble("discount"));
 
                     System.out.println("Id : " + invoices.getId());
                     System.out.println("Buyer_id : " + invoices.getBuyer_id());
@@ -493,6 +496,7 @@ public class DataBaseIntraction {
                     System.out.println("Email : " + invoices.getCgst());
                     System.out.println("Gender : " + invoices.getSgst());
                     System.out.println("Address : " + invoices.getTaxable_price());
+                    System.out.println("Address : " + invoices.getDiscount());
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {

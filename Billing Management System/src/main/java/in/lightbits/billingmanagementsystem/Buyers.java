@@ -4,6 +4,7 @@ public class Buyers {
     private String name;
     private String mobile;
     private String email;
+
     private String gender;
     private String address;
 

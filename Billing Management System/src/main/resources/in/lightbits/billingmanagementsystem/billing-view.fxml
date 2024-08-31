@@ -46,11 +46,20 @@
 
 
         <Separator layoutX="876.0" layoutY="13.0" orientation="VERTICAL" prefHeight="69.0" prefWidth="6.0" />
-        <ImageView fitHeight="37.0" fitWidth="38.0" layoutX="1054.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="26.0" fitWidth="32.0" layoutX="1059.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@icons/userLogo.png" />
             </image>
         </ImageView>
+        <Button fx:id="billingClosed" layoutX="1079.0" layoutY="-2.0" mnemonicParsing="false" onAction="#billingCloseBtnHandler" prefHeight="37.0" prefWidth="52.0" text="">
+        <graphic>
+        <ImageView fitHeight="37.0" fitWidth="35.0" layoutX="1015.0" layoutY="8.0">
+            <image>
+                <Image url="@icons/close.png" />
+            </image>
+        </ImageView>
+        </graphic>
+        </Button>
         <Label fx:id="myLabel3" layoutX="1032.0" layoutY="60.0" text="U: " />
         <Label fx:id="currentUser" layoutX="1048.0" layoutY="60.0" text="user" />
         <Label fx:id="myLabel2" layoutX="888.0" layoutY="16.0" text="D :" />
@@ -136,11 +145,14 @@
         <TextField fx:id="totalAmount" layoutX="762.0" layoutY="366.0" prefHeight="26.0" prefWidth="147.0" promptText="total amount" />
         <Label fx:id="myLabel101" layoutX="687.0" layoutY="399.0" text="Paid Amt. :" />
         <TextField fx:id="paidAmount" layoutX="762.0" layoutY="394.0" prefHeight="26.0" prefWidth="147.0" promptText="paid amount" />
-        <Label fx:id="myLabel10" layoutX="687.0" layoutY="428.0" text="Return Amt. :" />
-        <TextField fx:id="returnedAmount" layoutX="762.0" layoutY="423.0" prefHeight="26.0" prefWidth="147.0" promptText="returned amount" />
+        <Label fx:id="myLabel10" layoutX="688.0" layoutY="427.0" text="Discount : " />
+        <TextField fx:id="discount" layoutX="763.0" layoutY="422.0" prefHeight="26.0" prefWidth="147.0" promptText="discount" />
+        <Label fx:id="myLabel102" layoutX="688.0" layoutY="454.0" text="Return Amt. :" />
+        <TextField fx:id="returnedAmount" layoutX="762.0" layoutY="450.0" prefHeight="26.0" prefWidth="147.0" promptText="returned amount" />
         <Button fx:id="saveBillingBtn" layoutX="938.0" layoutY="335.0" mnemonicParsing="false" onAction="#billingSaveBtnHandler" prefHeight="55.0" prefWidth="167.0" text="Save" />
-        <Button fx:id="resetBillingBtn" layoutX="938.0" layoutY="394.0" mnemonicParsing="false" onAction="#billingResetBtnHandler" prefHeight="26.0" prefWidth="167.0" text="Reset" />
-        <Button fx:id="closeBillingBtn" layoutX="938.0" layoutY="424.0" mnemonicParsing="false" onAction="#billingCloseBtnHandler" prefHeight="26.0" prefWidth="167.0" text="close" />
+        <Button fx:id="resetBillingBtn" layoutX="938.0" layoutY="394.0" mnemonicParsing="false" onAction="#billingResetBtnHandler" prefHeight="55.0" prefWidth="167.0" text="Reset" />
+        <Button fx:id="closeBillingBtn" layoutX="938.0" layoutY="458.0" mnemonicParsing="false" onAction="#billingCloseBtnHandler" prefHeight="26.0" prefWidth="167.0" text="close" />
+
 
 
 

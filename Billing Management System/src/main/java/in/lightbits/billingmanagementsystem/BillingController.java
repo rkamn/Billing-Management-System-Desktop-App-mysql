@@ -106,6 +106,8 @@ public class BillingController {
     @FXML
     private TextField invoiceOrMobile;
     @FXML
+    private TextField discount;
+    @FXML
     private Button invoiceSearchBtn;
 
     private int countAddProductBtn = 0;
@@ -113,6 +115,7 @@ public class BillingController {
     private float totalAmt = 0;
     private float paidAmt = 0;
     private float returnedAmt = 0;
+
     boolean mobileNotAvailableInDatabase = false;
 
 
@@ -123,7 +126,6 @@ public class BillingController {
     DataBaseIntraction dataBaseIntraction = new DataBaseIntraction();
     List<Products> productsList = new ArrayList<>();
     List<Buyers> buyersList = new ArrayList<>();
-    private ListView<Products> productListPDFView;
 
 
     private ObservableList<Products> productsObservableList;
@@ -131,7 +133,7 @@ public class BillingController {
     Shop shop = dataBaseIntraction.getShopDetailsByShopPincode(shopPin);
     InvoiceNumberGenerator invoiceNumberGenerator = new InvoiceNumberGenerator();
     String invoiceNum = invoiceNumberGenerator.generateInvoiceNumber();
-
+    MobileNumberValidation mobileNumberValidation = new MobileNumberValidation();
 
     public BillingController() throws IOException {
     }
@@ -201,8 +203,12 @@ public class BillingController {
 
     public void invoiceSearchBtnHandler(){
         String invoiceOrMobileNumber = invoiceOrMobile.getText();
+        //MobileNumberValidation mobileNumberValidation = new MobileNumberValidation();
+        boolean mobileValidity = mobileNumberValidation.checkMobileValidity(invoiceOrMobileNumber);
+        System.out.println(Character.getNumericValue(invoiceOrMobileNumber.charAt(0))< 5);
+
         Invoices invoices;
-        if(invoiceOrMobileNumber.length() >=10){
+        if(mobileValidity){
             invoices = dataBaseIntraction.searchInvoiceByMobileNumber(invoiceOrMobileNumber);
         }else{
             invoices = dataBaseIntraction.searchInvoiceByInvoiceNumber(invoiceOrMobileNumber);
@@ -234,11 +240,15 @@ public class BillingController {
     public void searchBuyerByMobileBtnHandler() {
 
         String mobile = buyersMobile.getText();
-        MobileNumberValidation mobileNumberValidation = new MobileNumberValidation(mobile);
-        Boolean mobileValidation = mobileNumberValidation.checkMobileValidity();
-        if(mobileValidation){
+       // MobileNumberValidation mobileNumberValidation = new MobileNumberValidation();
+        Boolean mobileValidity = mobileNumberValidation.checkMobileValidity(mobile);
+        if(mobile ==""){
+            buyersName.setText("");
+            buyersEmail.setText("");
+            buyersAddress.setText("");
+        }
+        else if(mobileValidity){
             System.out.println(mobile+" is a valid number, Congratulation!!..");
-
             buyersList = dataBaseIntraction.searchBuyersByMobileNumber(mobile);  // search buyers in database
         if (!buyersList.isEmpty()) {
             for (Buyers buyer : buyersList) {
@@ -257,6 +267,7 @@ public class BillingController {
                 buyersName.setEditable(false);
                 buyersEmail.setEditable(false);
                 buyersAddress.setEditable(false);
+                HSN.setEditable(false);
 
                 mobileNotAvailableInDatabase =false; // means mobile number available in database
 
@@ -271,6 +282,7 @@ public class BillingController {
             buyersName.setEditable(true);
             buyersEmail.setEditable(true);
             buyersAddress.setEditable(true);
+            HSN.setEditable(true);
 
             searchBuyerBtn.setVisible(true);
 
@@ -306,6 +318,7 @@ public class BillingController {
             productId.setText(product.getId()+""); // making string due to error
             price.setText(product.getPrice());
             desc.setText(product.getDescription());
+            HSN.setText(product.getHSN());
             //quantity.setText(product.getQuantity()); // this quantity should be user input not DB quantity
             taxRate.setText(product.getTaxRate());  // +" %"
             status.setText(product.getStatus());
@@ -452,9 +465,10 @@ public class BillingController {
             float cgst = cgstOrSgst();
             float sgst = cgstOrSgst();
             float taxablePrice = totalTaxablePrice();
+            float offerToYou = Float.parseFloat(discount.getText());
             buyersId = dataBaseIntraction.getBuyerByMobileNumber(mobile).getId();
 
-            status = dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNum, cgst, sgst, taxablePrice);
+            status = dataBaseIntraction.storeInvoiceDataToDatabase(buyersId, customerName, mobile, totalAmount, date, invoiceNum, cgst, sgst, taxablePrice,offerToYou);
             System.out.println("Invoice stored with number: " + invoiceNum);
         } catch (Exception e) {
             e.printStackTrace();
@@ -568,7 +582,7 @@ public class BillingController {
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(xPos * 3 * xPositionMul, yPosition-11);  // SSN number
-                    contentStream.showText("HSN000" +sNo);
+                    contentStream.showText(product.getHSN());
                     contentStream.endText();
 
                     int localTax = Integer.parseInt(product.getTaxRate());
@@ -623,7 +637,12 @@ public class BillingController {
                 contentStream.newLine();
                 contentStream.showText("Total Amount Paid: ₹" + paidAmountCalculation());
                 contentStream.newLine();
-                contentStream.showText("Amount Due / Returned: ₹" + returnedAmountCalculation());
+                float offerToYou = Float.parseFloat(discount.getText());
+                contentStream.showText("Discount : ₹"+offerToYou);
+                contentStream.newLine();
+                contentStream.showText("Amount After Discount : ₹ " + (totalAmount - offerToYou));
+                contentStream.newLine();
+                contentStream.showText("Amount Due / Returned: ₹" + (returnedAmountCalculation()));
                 contentStream.newLine();
                 contentStream.showText("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                 contentStream.newLine();
@@ -699,6 +718,9 @@ public class BillingController {
 
         invoice.append("Total Amount Due: ₹").append(calculateTotalSummation()).append("\n");
         invoice.append("Total Amount Paid: ₹").append(paidAmountCalculation()).append("\n");
+        float offerToYou = Float.parseFloat(discount.getText());
+        invoice.append("Discount : ₹").append(offerToYou).append("\n");
+        invoice.append("Amount After Discount : ₹").append(calculateTotalSummation() - offerToYou).append("\n");
         invoice.append("Amount Due / Returned: ₹").append(returnedAmountCalculation()).append("\n");
         invoice.append("----------------------------\n");
         invoice.append("Thank you for your purchase!");
@@ -727,6 +749,7 @@ public class BillingController {
         totalAmount.clear();
         paidAmount.clear();
         returnedAmount.clear();
+        discount.clear();
 
         productsObservableList.clear();  //clear table data
 
@@ -806,10 +829,12 @@ public class BillingController {
     public float returnedAmountCalculation(){
         //returned amount calculation
         String rAmount = returnedAmount.getText();
-        returnedAmt = totalAmt - paidAmt;
+        float offerToYou = Float.parseFloat(discount.getText());
+        returnedAmt = totalAmt - paidAmt - offerToYou;
         System.out.println("Amount Returned: "+returnedAmt);
         returnedAmount.setText(returnedAmt+"");
         returnedAmount.setEditable(false);
+
         return returnedAmt;
     }
 

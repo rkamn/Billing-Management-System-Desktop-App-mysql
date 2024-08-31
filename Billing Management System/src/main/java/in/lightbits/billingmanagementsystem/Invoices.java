@@ -10,10 +10,12 @@ public class Invoices {
     private double total;
     private double cgst;
     private double sgst;
+    private double discount;
     private double taxable_price;
 
     public Invoices(){}
-    public Invoices(int id, int buyer_id, String name, String mobile, String invoice, String date, double total, double cgst, double sgst, double taxable_price) {
+
+    public Invoices(int id, int buyer_id, String name, String mobile, String invoice, String date, double total, double cgst, double sgst, double discount, double taxable_price) {
         this.id = id;
         this.buyer_id = buyer_id;
         this.name = name;
@@ -23,6 +25,7 @@ public class Invoices {
         this.total = total;
         this.cgst = cgst;
         this.sgst = sgst;
+        this.discount = discount;
         this.taxable_price = taxable_price;
     }
 
@@ -100,6 +103,14 @@ public class Invoices {
 
     public double getTaxable_price() {
         return taxable_price;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 
     public void setTaxable_price(double taxable_price) {

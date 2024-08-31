@@ -107,7 +107,7 @@ public class UpdateBuyerController {
             String name = buyerName.getText();
             String mobile = buyerMobile.getText();
             String email = buyerEmail.getText();
-            String address = buyerName.getText();
+            String address = buyerAddress.getText();
             String gender = buyerGenderChoice.getValue();
 
 
