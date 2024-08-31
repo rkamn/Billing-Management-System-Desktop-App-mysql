@@ -16,12 +16,10 @@ public class HomeController extends VBox {
     private Button btnNewBuyer;
     @FXML
     private Button btnUpdateBuyer;
-
     @FXML
     private Button btnBuyerDetails;
     @FXML
     private Button btnDeleteBuyer;
-
     @FXML
     private Button btnNewProduct;
     @FXML
@@ -30,7 +28,6 @@ public class HomeController extends VBox {
     private Button btnDeleteProduct;
     @FXML
     private Button btnProductDetails;
-
     @FXML
     private Button btnBilling;
     @FXML
@@ -41,7 +38,6 @@ public class HomeController extends VBox {
 
     @FXML
     private BorderPane rootPane;
-
     @FXML
     private Label myLabel1;
     @FXML
@@ -80,6 +76,10 @@ public class HomeController extends VBox {
     private Label myLabel18;
     @FXML
     private Label myLabel19;
+    @FXML
+    private Label myLabel20;
+    @FXML
+    private Label myLabel21;
 
     @FXML
     private String basePath="/in/lightbits/billingmanagementsystem/";
@@ -122,6 +122,8 @@ public class HomeController extends VBox {
             myLabel17.setVisible(false);
             myLabel18.setVisible(false);
             myLabel19.setVisible(false);
+            myLabel20.setVisible(false);
+            myLabel21.setVisible(false);
 
         } else {
             System.err.println("Button reference is null.");
@@ -165,6 +167,8 @@ public class HomeController extends VBox {
             myLabel17.setVisible(true);
             myLabel18.setVisible(true);
             myLabel19.setVisible(true);
+        myLabel20.setVisible(true);
+        myLabel21.setVisible(true);
 
             // bussiness logic for home
 

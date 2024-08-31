@@ -160,8 +160,8 @@
       <Label fx:id="myLabel17" layoutX="359.0" layoutY="119.0" text="Product" />
       <Label fx:id="myLabel18" layoutX="92.0" layoutY="120.0" text="Buyer" />
       <Label fx:id="myLabel19" layoutX="560.0" layoutY="121.0" text="Product" />
-      <Label layoutX="494.0" layoutY="97.0" text="Product" />
-      <Label layoutX="497.0" layoutY="120.0" text="Details" />
+      <Label fx:id="myLabel20" layoutX="494.0" layoutY="97.0" text="Product" />
+      <Label fx:id="myLabel21" layoutX="497.0" layoutY="120.0" text="Details" />
 
 
 

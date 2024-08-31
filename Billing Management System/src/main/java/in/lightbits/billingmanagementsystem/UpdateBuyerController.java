@@ -17,9 +17,6 @@ import java.sql.*;
 
 
 public class UpdateBuyerController {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/billing_system";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "rakesh458458";
     @FXML
     private TextField searchBox;
 
@@ -52,8 +49,6 @@ public class UpdateBuyerController {
 
     @FXML
     private void initialize() {
-
-
         // Populate the ChoiceBox with items
         buyerGenderChoice.getItems().addAll("Male", "Female", "Other");
         // Optionally set a default value
@@ -68,7 +63,7 @@ public class UpdateBuyerController {
     }
 
     @FXML
-    public void searchBtnHandler() throws SQLException, IOException {
+    public void searchBtnHandler() {
         //get data from database based on mobile
         String searchBoxMobile = searchBox.getText();
         if (searchBoxMobile.isEmpty()) {
@@ -76,67 +71,25 @@ public class UpdateBuyerController {
             return;
         }
 
-
-
-        String sqlBayerSelectQuery = "select * from billing_system.buyers where mobile = ? ";
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-
-            try (Connection con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWORD);
-                 PreparedStatement statement = con.prepareStatement(sqlBayerSelectQuery)){
-
-                statement.setString(1, searchBoxMobile);
-                ResultSet resultSet  = statement.executeQuery();
-
-
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    System.out.println("ID : " + id);
-
-                    buyerId = id;
+        Buyers buyer = dataBaseIntraction.getBuyerByMobileNumber(searchBoxMobile);
+        if(buyer !=null){
+            buyerId = buyer.getId();
                     System.out.println("Current Buyer id : " + buyerId);
-                    buyerName.setText(resultSet.getString("name"));
-                    buyerMobile.setText(resultSet.getString("mobile"));
-                    buyerEmail.setText(resultSet.getString("email"));
-                    buyerAddress.setText(resultSet.getString("address"));
-                    buyerGenderChoice.setValue(resultSet.getString("gender"));
-                    System.out.println(buyerName);
-
+                    buyerName.setText(buyer.getName());
+                    buyerMobile.setText(buyer.getMobile());
+                    buyerEmail.setText(buyer.getEmail());
+                    buyerAddress.setText(buyer.getAddress());
+                    buyerGenderChoice.setValue(buyer.getGender());
 
                     System.out.println("Name : " + buyerName);
                     System.out.println("Mobile : " + buyerMobile);
                     System.out.println("Email : " + buyerEmail);
                     System.out.println("Name : " + buyerAddress);
                     System.out.println("Gender : " + buyerGenderChoice);
-                }
-            }
-        }catch (SQLException | ClassNotFoundException e){
-            e.printStackTrace();
-            customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching data.");
-
+        }else {
+            customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Error", "No Data Found in database..");
         }
     }
-
-
-
-
-//   @FXML
-//    public void getDataFromResultSet(TextField name, TextField mobile, TextField email,TextField gender) throws NullPointerException, IOException {
-//        System.out.println("+++++++++++++");
-//        System.out.println(name);
-//        try{
-//            System.out.println(buyerName.getText());
-//            buyerName.setText(name.getText());
-//            System.out.println(buyerName);
-//            buyerMobile.setText(buyerMobile.getText());
-//            buyerEmail.setText(buyerEmail.getText());
-//            buyerGenderChoice.setValue(buyerGenderChoice.getValue());
-//        }catch (NullPointerException e){
-//            e.printStackTrace();
-//        }
-//    }
-
 
     @FXML
     public void updateBtnHandler(ActionEvent actionEvent) {
@@ -178,6 +131,8 @@ public class UpdateBuyerController {
         buyerName.clear();
         buyerEmail.clear();
         buyerMobile.clear();
+        buyerAddress.clear();
+        buyerGenderChoice.setValue("");
     }
 
     @FXML
