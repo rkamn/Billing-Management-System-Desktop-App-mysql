@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
 public class NewBuyerController {
-
     @FXML
     private TextField buyerName;
     @FXML
@@ -20,7 +19,6 @@ public class NewBuyerController {
     private TextField buyerAddress;
     @FXML
     private ChoiceBox<String> buyerGenderChoice;
-
 
     @FXML
     private Button saveBtn;
@@ -37,50 +35,20 @@ public class NewBuyerController {
     @FXML
     private void initialize() {
 
-
         // Populate the ChoiceBox with items
         buyerGenderChoice.getItems().addAll("Male", "Female", "Other");
         // Optionally set a default value
         buyerGenderChoice.setValue("Male");
-
         buyerGenderChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             handleGenderSelection(newValue);
         });
-
-//        //buyer name field
-//        buyerName.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-//            if (isNowFocused) {
-//                handleFocusGainedBuyerName();
-//            } else {
-//                handleFocusLostBuyerName();
-//            }
-//        });
-//        buyerMobile.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-//            if (isNowFocused) {
-//                handleFocusGainedBuyerMobile();
-//            } else {
-//                handleFocusLostBuyerMobile();
-//            }
-//        });
-//        buyerEmail.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-//            if (isNowFocused) {
-//                handleFocusGainedBuyerEmail();
-//            } else {
-//                handleFocusLostBuyerEmail();
-//            }
-//        });
-//
-
     }
 
-
     //work on all handlers
-
     public void handleGenderSelection(String newValue){
 
         System.out.println("Selected item: " + newValue);
     }
-
 
     public void handleFocusGainedBuyerName() {
 

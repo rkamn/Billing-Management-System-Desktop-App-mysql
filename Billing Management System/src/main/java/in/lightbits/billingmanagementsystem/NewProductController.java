@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 public class NewProductController {
 
@@ -19,6 +20,8 @@ public class NewProductController {
     private TextField quantity;
     @FXML
     private TextField taxRate;
+    @FXML
+    private TextField HSN;
 
     @FXML
     private ChoiceBox<String> status;
@@ -107,14 +110,8 @@ public class NewProductController {
 
     @FXML
     public void handleFocusLostTaxRate() {
-
         System.out.println("product tax rate focus Lost");
     }
-
-
-
-
-
 
     @FXML
     public void saveProductBtnHandler(ActionEvent actionEvent) {
@@ -123,13 +120,14 @@ public class NewProductController {
         String description = desc.getText();
         String quant = quantity.getText();
         String taxSlab = taxRate.getText();
+        String HSNNo = HSN.getText();
         String statusValue = status.getValue();
         System.out.println(name);
         if(name !=null){
             //inserting new product to DB
             System.out.println("Buyer Name : "+name);
-            dataBaseProductIntraction.insertNewProductData(name,priceRate,description,quant,taxSlab,statusValue);
-            customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Successful", "Data Saved successfully, Welcome, Mr. : " + name + " !");
+            dataBaseProductIntraction.insertNewProductData(name,priceRate,description,quant,taxSlab,HSNNo,statusValue);
+            customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Successful", "Data Saved successfully");
             //clear all fiels
             resetProductBtnHandler(actionEvent);
         }else {
@@ -158,5 +156,11 @@ public class NewProductController {
         customUtility.showAlertActionStatus(Alert.AlertType.INFORMATION, "Closing New Product Page..", "Closing..., Thank you!!");
         // navigation to home-view.fxml
         customUtility.navigationToNewPage(closeProductBtn, basePath+"home-view.fxml");
+    }
+
+    public void handleFocusGainedHSN(MouseEvent mouseEvent) {
+    }
+
+    public void handleFocusLostHSN(MouseEvent mouseEvent) {
     }
 }

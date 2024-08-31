@@ -1,16 +1,9 @@
 package in.lightbits.billingmanagementsystem;
 
-import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
-
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 public class DataBaseProductIntraction {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/billing_system";
@@ -84,9 +77,10 @@ public class DataBaseProductIntraction {
                     String desc = resultSet.getString("description");
                     String quantity = resultSet.getString("quantity");
                     String taxRate = resultSet.getString("tax_slab");
+                    String HSN = resultSet.getString("HSN");
                     String status = resultSet.getString("status");
 
-                    productsList.add(new Products(id, name, price, desc, quantity, taxRate, status));
+                    productsList.add(new Products(id, name, price, desc, quantity, taxRate, HSN, status));
 
                     System.out.println("ID : " + id);
                     System.out.println("Name : " + name);
@@ -94,6 +88,7 @@ public class DataBaseProductIntraction {
                     System.out.println("Description : " + desc);
                     System.out.println("Quantity : " + quantity);
                     System.out.println("Tax Slab : " + taxRate);
+                    System.out.println("HSN : " + HSN);
                     System.out.println("Status : " + status);
 
                 }
@@ -104,10 +99,41 @@ public class DataBaseProductIntraction {
         return productsList;
     }
 
+    //get all products detail
+    public List<Products> getAllProducts() {
+        List<Products> products = new ArrayList<>();
+        String getAllProductsQuery = "SELECT * FROM billing_system.products";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(getAllProductsQuery)) {
+
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    System.out.println(id);
+                    String name = rs.getString("name");
+                    String price = rs.getString("price");
+                    String description = rs.getString("description");
+                    String quantity = rs.getString("quantity");
+                    String taxRate = rs.getString("tax_slab");
+                    String HSNNo = rs.getString("HSN");
+                    String status = rs.getString("status");
+
+                    products.add(new Products(id, name, price, description, quantity, taxRate, HSNNo ,status));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
 
     //update existing product by id
-    public boolean updateProductById(int id, String name, String price, String description, String quantity, String tax_slab, String status) {
-        String updateProductQuery = "UPDATE billing_system.products SET name = ?, price = ?, description = ?,quantity = ?, tax_slab = ?,status = ? WHERE id = ?";
+    public boolean updateProductById(int id, String name, String price, String description, String quantity, String tax_slab,String HSN, String status) {
+        String updateProductQuery = "UPDATE billing_system.products SET name = ?, price = ?, description = ?,quantity = ?, tax_slab = ?,HSN = ?,status = ? WHERE id = ?";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -120,8 +146,9 @@ public class DataBaseProductIntraction {
                 stmt.setString(3, description);
                 stmt.setString(4, quantity);
                 stmt.setString(5, tax_slab);
-                stmt.setString(6, status);
-                stmt.setInt(7, id);
+                stmt.setString(6, HSN);
+                stmt.setString(7, status);
+                stmt.setInt(8, id);
                 stmt.executeUpdate();
             }
         } catch (Exception e) {
@@ -172,8 +199,8 @@ public class DataBaseProductIntraction {
 
 
     //insert new product entry to db
-    public void insertNewProductData(String name, String price, String description, String quantity, String tax_slab, String status) {
-        String insertNewProductSQLQuery =   "INSERT INTO billing_system.products ( name,price,description,quantity,tax_slab,status) values (?,?,?,?,?,?)";
+    public void insertNewProductData(String name, String price, String description, String quantity, String tax_slab,String HSN, String status) {
+        String insertNewProductSQLQuery =   "INSERT INTO billing_system.products ( name,price,description,quantity,tax_slab,HSN,status) values (?,?,?,?,?,?,?)";
 
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -185,7 +212,8 @@ public class DataBaseProductIntraction {
                 stmt.setString(3, description);
                 stmt.setString(4, quantity);
                 stmt.setString(5, tax_slab);
-                stmt.setString(6, status);
+                stmt.setString(6, HSN);
+                stmt.setString(7, status);
                 stmt.executeUpdate();
             }
         }catch (Exception e) {

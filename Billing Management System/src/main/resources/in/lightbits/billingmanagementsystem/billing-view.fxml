@@ -94,16 +94,18 @@
         <TextField fx:id="productName" layoutX="238.0" layoutY="227.0" prefHeight="26.0" prefWidth="224.0" promptText="search product name here" />
         <Label fx:id="myLabel132" layoutX="482.0" layoutY="229.0" text="Quantity :" />
         <TextField fx:id="quantity" layoutX="547.0" layoutY="225.0" prefHeight="26.0" prefWidth="114.0" promptText="enter quantity" />
-        <Label fx:id="myLabel1122" layoutX="43.0" layoutY="279.0" text="P_Id : " />
-        <TextField fx:id="productId" layoutX="84.0" layoutY="275.0" prefHeight="26.0" prefWidth="98.0" promptText="prod id" />
+        <Label fx:id="myLabel1122" layoutX="43.0" layoutY="279.0" text="Id : " />
+        <TextField fx:id="productId" layoutX="68.0" layoutY="275.0" prefHeight="26.0" prefWidth="47.0" promptText="id" />
+        <Label fx:id="myLabel11221" layoutX="137.0" layoutY="279.0" text="HSN : " />
+        <TextField fx:id="HSN" layoutX="170.0" layoutY="276.0" prefHeight="26.0" prefWidth="85.0" promptText="HSN" />
         <Label fx:id="myLabel1321" layoutX="757.0" layoutY="280.0" text="Status :" />
         <TextField fx:id="status" layoutX="804.0" layoutY="276.0" prefHeight="26.0" prefWidth="107.0" promptText="active" />
-        <Label fx:id="myLabel112" layoutX="202.0" layoutY="279.0" text="Price : " />
-        <TextField fx:id="price" layoutX="243.0" layoutY="275.0" prefHeight="26.0" prefWidth="107.0" promptText="price" />
-        <Label fx:id="myLabel1111" layoutX="376.0" layoutY="280.0" text="desc :" />
-        <TextField fx:id="desc" layoutX="421.0" layoutY="276.0" prefHeight="26.0" prefWidth="107.0" promptText="description" />
-        <Label fx:id="myLabel1311" layoutX="546.0" layoutY="281.0" text="Tax slab(%): " />
-        <TextField fx:id="taxRate" layoutX="618.0" layoutY="276.0" prefHeight="26.0" prefWidth="107.0" promptText="total tax %" />
+        <Label fx:id="myLabel112" layoutX="281.0" layoutY="279.0" text="Price : " />
+        <TextField fx:id="price" layoutX="322.0" layoutY="275.0" prefHeight="26.0" prefWidth="98.0" promptText="price" />
+        <Label fx:id="myLabel1111" layoutX="440.0" layoutY="279.0" text="desc :" />
+        <TextField fx:id="desc" layoutX="485.0" layoutY="275.0" prefHeight="26.0" prefWidth="92.0" promptText="description" />
+        <Label fx:id="myLabel1311" layoutX="587.0" layoutY="280.0" text="Tax slab(%): " />
+        <TextField fx:id="taxRate" layoutX="659.0" layoutY="275.0" prefHeight="26.0" prefWidth="73.0" promptText="total tax %" />
         <Button fx:id="addProductBtn" layoutX="935.0" layoutY="226.0" mnemonicParsing="false" onAction="#addProductBtnHandler" prefHeight="55.0" prefWidth="167.0" text="Add Product" />
 
 
@@ -139,7 +141,6 @@
         <Button fx:id="saveBillingBtn" layoutX="938.0" layoutY="335.0" mnemonicParsing="false" onAction="#billingSaveBtnHandler" prefHeight="55.0" prefWidth="167.0" text="Save" />
         <Button fx:id="resetBillingBtn" layoutX="938.0" layoutY="394.0" mnemonicParsing="false" onAction="#billingResetBtnHandler" prefHeight="26.0" prefWidth="167.0" text="Reset" />
         <Button fx:id="closeBillingBtn" layoutX="938.0" layoutY="424.0" mnemonicParsing="false" onAction="#billingCloseBtnHandler" prefHeight="26.0" prefWidth="167.0" text="close" />
-
 
 
 

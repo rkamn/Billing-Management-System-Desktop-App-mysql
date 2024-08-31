@@ -7,17 +7,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Optional;
 
 public class CustomUtility {
-
-    public void allCloseButtonHandler(){
-
-    }
-
-
     public void navigationToNewPage(Button userSentContainerBtn, String basePath){
         try {
             Parent loader = FXMLLoader.load(getClass().getResource(basePath));

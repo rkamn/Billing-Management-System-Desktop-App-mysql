@@ -6,6 +6,7 @@ public class Products {
     private String description;
     private String quantity;
     private String taxRate;
+    private String HSN;
     private String status;
 
 
@@ -13,13 +14,14 @@ public class Products {
 
     public Products(){}
 
-    public Products(int id, String name, String price, String description, String quantity, String taxRate, String status) {
+    public Products(int id, String name, String price, String description, String quantity, String taxRate,String HSN, String status) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
         this.quantity = quantity;
         this.taxRate = taxRate;
+        this.HSN = HSN;
         this.status = status;
     }
 
@@ -46,6 +48,11 @@ public class Products {
     public String getTaxRate() {
         return taxRate;
     }
+
+    public String getHSN() {
+        return HSN;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -74,6 +81,10 @@ public class Products {
 
     public void setTaxRate(String taxRate) {
         this.taxRate = taxRate;
+    }
+
+    public void setHSN(String HSN) {
+        this.HSN = HSN;
     }
 
     public void setStatus(String status) {

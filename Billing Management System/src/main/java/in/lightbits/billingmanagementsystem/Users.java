@@ -3,7 +3,7 @@ package in.lightbits.billingmanagementsystem;
 /*
 
 This class has been created for saving te user to database
-this will be for user for loging user
+this will be for user for logging user
 
  */
 public class Users {

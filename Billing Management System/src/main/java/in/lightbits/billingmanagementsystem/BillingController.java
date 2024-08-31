@@ -51,6 +51,8 @@ public class BillingController {
     @FXML
     private TextField taxRate;
     @FXML
+    private TextField HSN;
+    @FXML
     private TextField status;
 
     @FXML
@@ -314,6 +316,7 @@ public class BillingController {
         String description = desc.getText(); // not mandatory
         String quantityNew = quantity.getText();
         String taxSlab = taxRate.getText();
+        String HSNNo = HSN.getText();
         String statusNew = status.getText(); // not mandatory
 
         if(quantityNew.isEmpty() || quantityNew == null || quantityNew.equals(0) || quantityNew.equals('0')){
@@ -334,11 +337,11 @@ public class BillingController {
                 foundProduct.setQuantity(quantityNew);
                 System.out.println("Updated Quantity : "+quantityNew);
 
-                Products updatedProduct = new Products(sNo , name, priceNew, description, quantityNew, taxSlab, statusNew);
+                Products updatedProduct = new Products(sNo , name, priceNew, description, quantityNew, taxSlab, HSNNo, statusNew);
                 productsObservableList.removeIf(product -> product.getName().equals(name));
                 productsObservableList.add(updatedProduct);
             }else{
-                Products product = new Products(sNo , name, priceNew, description, quantityNew, taxSlab, statusNew);
+                Products product = new Products(sNo , name, priceNew, description, quantityNew, taxSlab, HSNNo, statusNew);
                 productsObservableList.add(product);
             }
         }

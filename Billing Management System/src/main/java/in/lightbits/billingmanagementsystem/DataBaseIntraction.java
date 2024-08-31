@@ -1,9 +1,6 @@
 package in.lightbits.billingmanagementsystem;
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-
-import java.io.IOException;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -464,7 +461,6 @@ public class DataBaseIntraction {
         String sqlInvoicesSelectQuery = "select * from billing_system.invoices where invoice = ? ";
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-
 
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                  PreparedStatement statement = con.prepareStatement(sqlInvoicesSelectQuery)) {

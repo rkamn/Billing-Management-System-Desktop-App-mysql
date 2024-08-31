@@ -10,6 +10,8 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeleteProductController {
 
@@ -46,9 +48,10 @@ public class DeleteProductController {
     CustomUtility customUtility = new CustomUtility();
     DataBaseProductIntraction dataBaseProductIntraction = new DataBaseProductIntraction();
 
+    List<Products> productsList = new ArrayList<>();
 
     @FXML
-    public void searchProductBtnHandler(ActionEvent actionEvent) throws SQLException, IOException {
+    public void searchProductBtnHandler(ActionEvent actionEvent){
         //get data from database based on name or id
         String searchBoxName = productSearchField.getText();
         //int searchBoxId = Integer.parseInt(searchBoxName);  // check type
@@ -57,45 +60,28 @@ public class DeleteProductController {
             return;
         }
 
-        String sqlProductSelectQuery = "select * from billing_system.products where name = ? ";
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
+        productsList = dataBaseProductIntraction.searchProductByName(searchBoxName);
 
+        if(!productsList.isEmpty()){
+            for(Products product : productsList){
+                productId = product.getId();
+                System.out.println("Current Buyer id : " + productId);
+                productName.setText(product.getName());
+                price.setText(product.getPrice());
+                desc.setText(product.getDescription());
+                quantity.setText(product.getQuantity());
+                taxRate.setText(product.getTaxRate());
+                status.setValue(product.getStatus());
 
-            try (Connection con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWORD);
-                 PreparedStatement statement = con.prepareStatement(sqlProductSelectQuery)){
-
-                statement.setString(1, searchBoxName);
-                ResultSet resultSet  = statement.executeQuery();
-
-
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    System.out.println("ID : " + id);
-
-                    productId = id;
-                    System.out.println("Current Buyer id : " + productId);
-                    productName.setText(resultSet.getString("name"));
-                    price.setText(resultSet.getString("price"));
-                    desc.setText(resultSet.getString("description"));
-                    quantity.setText(resultSet.getString("quantity"));
-                    taxRate.setText(resultSet.getString("tax_slab"));
-                    status.setValue(resultSet.getString("status"));
-
-                    System.out.println("Name : " + productName);
-                    System.out.println("Mobile : " + price);
-                    System.out.println("Email : " + desc);
-                    System.out.println("Gender : " + quantity);
-                    System.out.println("Email : " + taxRate);
-                    System.out.println("Gender : " + status);
-
-                }
+                System.out.println("Name : " + productName);
+                System.out.println("Mobile : " + price);
+                System.out.println("Email : " + desc);
+                System.out.println("Gender : " + quantity);
+                System.out.println("Email : " + taxRate);
+                System.out.println("Gender : " + status);
             }
-        }catch (SQLException | ClassNotFoundException e){
-            e.printStackTrace();
-            customUtility.showAlertActionStatus(Alert.AlertType.ERROR, "Database Error", "An error occurred while fetching data.");
-
         }
+
     }
 
 
@@ -112,7 +98,7 @@ public class DeleteProductController {
         }else{
             // set data on same it after getting data by id
             System.out.println( productName.getText()+" has buyer id : "+productId);
-            System.out.println("delete product from the databse");
+            System.out.println("delete product from the database");
 
             int id = productId;
             String name = productName.getText();
