@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
@@ -130,6 +131,9 @@ public class BillingController {
 
 
     private ObservableList<Products> productsObservableList;
+
+    private ObservableList<Products> dropdownObservableProducts = FXCollections.observableArrayList(dataBaseProductIntraction.getAllProducts());
+
 
     Shop shop = dataBaseIntraction.getShopDetailsByShopPincode(shopPin);
     InvoiceNumberGenerator invoiceNumberGenerator = new InvoiceNumberGenerator();
@@ -853,17 +857,51 @@ public class BillingController {
 
     public void handleFocusGainedProductName(MouseEvent mouseEvent) {
         System.out.println("inside focus gain");
-        productName.setPromptText("start typing...");
-        productName.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+        productName.setPromptText("start typing at least 3 character...");
+        productName.addEventHandler(KeyEvent.KEY_TYPED, event -> {
             String input = productName.getText();
             if(input.length() >= 3){
                 System.out.println("inside event...");
+                System.out.println("input data: " + input);
                 showSuggestions(productName, input);
             } else {
                 // Hide suggestions if input length is 3 or less
                 suggestionsPopup.hide();
             }
         });
+    }
+
+    private void showSuggestions(TextField productName, String input) {
+        ObservableList<CustomMenuItem> menuItems = FXCollections.observableArrayList();
+        System.out.println("inside suggestion");
+        for (Products product : dropdownObservableProducts) {
+            System.out.println("inside suggestion list");
+            if (product.getName().toLowerCase().contains(input.toLowerCase())) {
+                System.out.println("inside suggestion list : "+product.getName());
+                Label suggestionLabel = new Label(product.getName());
+                CustomMenuItem item = new CustomMenuItem(suggestionLabel,true);
+                item.setOnAction(event -> {
+                    // Set the text to the selected suggestion and hide the popup
+                    productName.setText(product.getName());
+                    suggestionsPopup.hide();
+                });
+                menuItems.add(item);
+            }
+        }
+        // If there are no matching suggestions, hide the popup
+        if (menuItems.isEmpty()) {
+            System.out.println("inside hide suggestion bcz of empty");
+            suggestionsPopup.hide();
+        } else {
+            System.out.println("inside suggestion getItem");
+            suggestionsPopup.getItems().clear();
+            suggestionsPopup.getItems().addAll(menuItems);
+            if (!suggestionsPopup.isShowing()) {
+                System.out.println("inside suggestion getItem inner");
+                suggestionsPopup.show(productName, productName.getLayoutX(), productName.getLayoutY() + productName.getHeight());
+                suggestionsPopup.show(productName, Side.BOTTOM, 1, 1);
+            }
+        }
     }
 
     public void productAutoSuggestion(){
@@ -879,32 +917,8 @@ public class BillingController {
             }
         });
     }
-    private void showSuggestions(TextField productName, String input) {
-        ObservableList<CustomMenuItem> menuItems = FXCollections.observableArrayList();
-        for (Products product : productsObservableList) {
-            if (product.getName().toLowerCase().contains(input.toLowerCase())) {
-                Label suggestionLabel = new Label(product.getName());
-                CustomMenuItem item = new CustomMenuItem(suggestionLabel,true);
-                item.setOnAction(event -> {
-                    // Set the text to the selected suggestion and hide the popup
-                    productName.setText(product.getName());
-                    suggestionsPopup.hide();
-                });
-                menuItems.add(item);
-            }
-        }
-        // If there are no matching suggestions, hide the popup
-        if (menuItems.isEmpty()) {
-            suggestionsPopup.hide();
-        } else {
-            suggestionsPopup.getItems().clear();
-            suggestionsPopup.getItems().addAll(menuItems);
-            if (!suggestionsPopup.isShowing()) {
-                suggestionsPopup.show(productName, productName.getLayoutX(), productName.getLayoutY() + productName.getHeight());
-            }
-        }
-    }
 
     public void handleFocusLostProductName(MouseEvent mouseEvent) {
     }
+
 }
